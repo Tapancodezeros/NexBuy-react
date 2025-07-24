@@ -57,6 +57,11 @@ export const Header = () => {
               </button>
             </li>
             <li>
+                  <button className={buttonClass("/Product1", "green")} onClick={() => navigate("/Product1")}>
+                    singleProduct
+                  </button>
+                </li>
+            <li>
               <button className={buttonClass("/about", "blue")} onClick={() => navigate("/about")}>
                 About
               </button>
@@ -105,6 +110,7 @@ export const Header = () => {
                     Register
                   </button>
                 </li>
+                
               </>
             )}
           </ul>

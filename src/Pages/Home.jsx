@@ -5,7 +5,7 @@ import { Footer } from "../components/UI/Footer";
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-100 to-white">
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-200 to-white">
       <Header />
 
       <main className="flex-1 flex flex-col items-center justify-center text-center p-6">

@@ -7,7 +7,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Header } from "../components/UI/Header";
 import { Footer } from "../components/UI/Footer";
-
+import { Navigate } from "react-router-dom";
 const Product = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -107,7 +107,7 @@ const Product = () => {
                         ⭐ {product.rating.rate}
                       </span>
                     )}
-                  </div>
+                 </div>
                 </div>
               </div>
             ))}

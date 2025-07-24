@@ -14,10 +14,11 @@ const Contact = () => {
     <section className="min-h-screen bg-gray-100 py-10">
       <Header />
       <br/>
-      <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>
+  
 
       <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg">
         <form onSubmit={handleFormSubmit} className="space-y-6">
+              <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>
           <input
             type="text"
             className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"

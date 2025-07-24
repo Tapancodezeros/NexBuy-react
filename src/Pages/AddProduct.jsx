@@ -37,9 +37,6 @@ const AddProduct = () => {
       price: parseFloat(product.price),
     };
 
-    // Make API call (optional: you may skip it if only using localStorage)
-    const response = await axios.post("https://fakestoreapi.com/products", newProduct);
-
     // Save to localStorage with new ID
     localStorage.setItem("products", JSON.stringify([...existingProducts, newProduct]));
 
@@ -94,15 +91,7 @@ const AddProduct = () => {
           required
           className="w-full p-2 border rounded"
         />
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={product.category}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
+        <input type="text" name="category" placeholder="Category" value={product.category} onChange={handleChange} required className="w-full p-2 border rounded"/>
         <input
           type="number"
           name="pice"
