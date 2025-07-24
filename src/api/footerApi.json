@@ -1,0 +1,17 @@
+[
+  {
+    "icon": "MdPlace",
+    "title": "Find us",
+    "details":"Ahmadabad, Gujarat"
+  },
+  {
+    "icon": "IoCallSharp",
+    "title": "Call us",
+    "details": "9313221604"
+  },
+  {
+    "icon": "TbMailPlus",
+    "title": "Mail us",
+    "details": "contact@gmail.com"
+  }
+]
