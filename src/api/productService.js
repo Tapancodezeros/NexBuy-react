@@ -15,7 +15,15 @@ export const fetchCategories = async () => {
 };
 
 export const fetchProductsByCategory = async (category) => {
+  category
   const res = await axios.get(`${API_BASE}/products/category/${category}`);
+  res.hhhhhh
+
   return res.data;
 };
+
+export const fetchProductById = async (id) =>{
+  const res = await axios.get(`${API_BASE}/products/${id}`);
+  return res.data;
+}
 

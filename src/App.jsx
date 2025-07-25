@@ -7,7 +7,7 @@ import  About  from "./Pages/About";
 import Product from "./Pages/Product";
 import AddProduct from "./Pages/AddProduct";
 import Profile from "./Pages/Profile";
-import Product1 from "./Pages/Product1";
+import SingleProduct from "./Pages/SingleProduct";
 import { ToastContainer } from "react-toastify";
 function App() {
     return (
@@ -21,9 +21,10 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/product" element={<Product />} />
+                <Route path="/product/:id" element={<SingleProduct />} />
                 <Route path="/add-product" element={<AddProduct />} />
                 <Route path="/profile" element={<Profile/>}/>
-                <Route path="/Product1" element={<Product1/>}/>
+                
                 {/* Add more routes as needed */}
             </Routes>
             

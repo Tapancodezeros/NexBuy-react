@@ -68,7 +68,7 @@ const AddProduct = () => {
         <input
           type="number"
           name="price"
-          placeholder="Price"
+          placeholder="Price in RS"
           value={product.price}
           onChange={handleChange}
           required
@@ -98,6 +98,7 @@ const AddProduct = () => {
           placeholder="pice"
           value={product.pice}
           onChange={handleChange}
+          
           required
           className="w-full p-2 border rounded"
         />
@@ -110,7 +111,7 @@ const AddProduct = () => {
       </form>
 
       <NavLink to="/product">
-        <button className="mt-4 bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition duration-200">
+        <button className="mt-4 bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition duration-200 mx-40">
           Go Back
         </button>
       </NavLink>

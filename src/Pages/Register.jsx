@@ -2,7 +2,9 @@ import React from "react";
 import { useFormik } from "formik";
 import { signUpSchema } from "../schemas";
 import { useNavigate, Link } from "react-router-dom";
-
+import userimg from "../assets/images/Free.png"
+import { Header } from "../components/UI/Header";
+import { Footer } from "../components/UI/Footer";
 const initialValues = {
   name: "",
   email: "",
@@ -26,7 +28,10 @@ const Register = () => {
   });
 
   return (
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-200 to-white">
+    <Header/>  
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      
       <div className="bg-white rounded-xl shadow-lg max-w-4xl w-full grid md:grid-cols-2">
         {/* Left Form */}
         <div className="p-8 md:p-10">
@@ -133,13 +138,16 @@ const Register = () => {
         {/* Right Side Image */}
         <div className="hidden md:block">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/d/de/Amazon_icon.png"
+            src={userimg}
             alt="Registration illustration"
             className="object-cover h-full w-full rounded-r-xl"
           />
         </div>
       </div>
     </div>
+    <Footer/>
+</div>
+
   );
 };
 

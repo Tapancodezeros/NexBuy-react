@@ -2,14 +2,13 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
-
+import logo from "../../assets/images/NexGen.png"
 export const Header = () => {
   const [show, setShow] = useState(false);
   const isLoggedIn = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-
   const handleToggle = () => setShow(!show);
 
   const handleLogout = () => {
@@ -29,12 +28,14 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-gray-900 shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="bg-gray-800 shadow-md fixed top-0 left-0 right-0 z-0">
+      <div className="container mx-auto px-0 py-0 flex items-center justify-between">
         {/* Logo */}
-        <NavLink to="/" className="text-2xl font-bold text-blue-400">
-          NexBuy
-        </NavLink>
+        <a className="text-black h-16 justify-items-center text-l font-medium rounded-md transition-colors" onClick={() => navigate("/")}>
+          <img src={logo} alt="profile" className="h-16 w-25 rounded-full">
+          </img>
+        </a>
+
 
         {/* Hamburger Icon - Mobile */}
         <div
@@ -56,11 +57,7 @@ export const Header = () => {
                 Home
               </button>
             </li>
-            <li>
-                  <button className={buttonClass("/Product1", "green")} onClick={() => navigate("/Product1")}>
-                    singleProduct
-                  </button>
-                </li>
+          
             <li>
               <button className={buttonClass("/about", "blue")} onClick={() => navigate("/about")}>
                 About
@@ -86,6 +83,7 @@ export const Header = () => {
                     onClick={() => navigate("/profile")}
                   >
                     <FaUserCircle className="text-xl" />
+                    
                     Profile
                   </button>
                 </li>

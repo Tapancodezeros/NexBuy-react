@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authService";
 import { toast } from "react-toastify";
+import { Header } from "../components/UI/Header";
+import { Footer } from "../components/UI/Footer";
+
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("michaelw");
@@ -24,7 +27,9 @@ const Login = () => {
   }; 
 
   return (
+    <div>
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <Header/>
       <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
         <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
           Login to NexBuy
@@ -78,6 +83,9 @@ const Login = () => {
         </p>
       </div>
     </div>
+          <Footer/>
+ </div>
+
   );
 };
 

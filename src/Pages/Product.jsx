@@ -1,4 +1,4 @@
-// src/pages/ProductList.jsx
+// src/pages/Product.jsx
 import React, { useEffect, useState } from "react";
 import {
   fetchCategories,
@@ -7,26 +7,39 @@ import {
 import { NavLink } from "react-router-dom";
 import { Header } from "../components/UI/Header";
 import { Footer } from "../components/UI/Footer";
-import { Navigate } from "react-router-dom";
+
 const Product = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState("all");
+
+  const getLocalProducts = () => {
+    return JSON.parse(localStorage.getItem("localProducts")) || [];
+  };
 
   useEffect(() => {
     const loadInitial = async () => {
       const cats = await fetchCategories();
       setCategories(cats);
 
-      // Load all products grouped by category
-      const categoryWise = await Promise.all(
+      const apiCategoryWise = await Promise.all(
         cats.map(async (cat) => {
           const products = await fetchProductsByCategory(cat);
           return { category: cat, products };
         })
       );
 
-      setCategoryProducts(categoryWise);
+      const localProducts = getLocalProducts();
+
+      const merged = apiCategoryWise.map((group) => {
+        const localForCat = localProducts.filter((p) => p.category === group.category);
+        return {
+          category: group.category,
+          products: [...group.products, ...localForCat],
+        };
+      });
+
+      setCategoryProducts(merged);
     };
 
     loadInitial();
@@ -36,26 +49,41 @@ const Product = () => {
     const selected = e.target.value;
     setSelectedCat(selected);
 
+    const localProducts = getLocalProducts();
+
     if (selected === "all") {
-      // Reload all categories
-      const allCategoryWise = await Promise.all(
+      const apiCategoryWise = await Promise.all(
         categories.map(async (cat) => {
           const products = await fetchProductsByCategory(cat);
           return { category: cat, products };
         })
       );
-      setCategoryProducts(allCategoryWise);
+
+      const merged = apiCategoryWise.map((group) => {
+        const localForCat = localProducts.filter((p) => p.category === group.category);
+        return {
+          category: group.category,
+          products: [...group.products, ...localForCat],
+        };
+      });
+
+      setCategoryProducts(merged);
     } else {
-      // Load single category products
-      const products = await fetchProductsByCategory(selected);
-      setCategoryProducts([{ category: selected, products }]);
+      const apiProducts = await fetchProductsByCategory(selected);
+      const localForCat = localProducts.filter((p) => p.category === selected);
+      setCategoryProducts([
+        {
+          category: selected,
+          products: [...apiProducts, ...localForCat],
+        },
+      ]);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <Header />
-      <br/><br/>
+      <br /><br /><br/>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 px-2">
         <h2 className="text-3xl font-bold text-center w-full sm:w-auto">Product Categories</h2>
 
@@ -72,7 +100,6 @@ const Product = () => {
               </option>
             ))}
           </select>
-          
 
           <NavLink
             to="/add-product"
@@ -85,29 +112,39 @@ const Product = () => {
 
       {categoryProducts.map(({ category, products }) => (
         <div key={category} className="mb-10">
-          <h3 className="text-2xl font-semibold mb-4 capitalize">{category}</h3>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <h3 className="text-2xl font-semibold mb-3 capitalize">{category}</h3>
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
+                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
               >
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="h-48 w-full object-contain p-4 bg-gray-50"
+                  className="h-48 w-full object-contain p-3 bg-gray-50"
                 />
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg truncate">{product.title}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{product.category}</p>
-                  <div className="mt-2 flex justify-between items-center">
-                    <span className="text-green-600 font-bold">₹{product.price}</span>
-                    {product.rating && (
-                      <span className="text-sm bg-yellow-100 px-2 py-1 rounded text-yellow-800">
-                        ⭐ {product.rating.rate}
-                      </span>
-                    )}
-                 </div>
+                <div className="p-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg truncate">{product.title}</h3>
+                    <p className="text-sm text-gray-500 mt-1 capitalize">{product.category}</p>
+                    <div className="mt-2 flex justify-between items-center">
+                      <span className="text-green-600 font-bold">₹{product.price*60}</span>
+                      {product.rating && (
+                        <span className="text-sm bg-yellow-100 px-2 py-1 rounded text-yellow-800">
+                          ⭐ {product.rating.rate}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <NavLink
+                      to={`/product/${product.id}`}
+                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition text-sm mx-55 rounded-3xl"
+                    >
+                      View Product
+                    </NavLink>
+                  </div>
                 </div>
               </div>
             ))}
