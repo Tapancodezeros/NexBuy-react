@@ -140,7 +140,7 @@ const Product = () => {
                   <div className="mt-4">
                     <NavLink
                       to={`/product/${product.id}`}
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition text-sm mx-55 rounded-3xl"
+                      className="bg-blue-500 text-white px-4 py-1 rounded-2xl hover:bg-blue-600 transition text-sm mx-55"
                     >
                       View Product
                     </NavLink>
