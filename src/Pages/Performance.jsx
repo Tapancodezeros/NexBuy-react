@@ -2,6 +2,7 @@ import React from "react";
 
 import { PerformanceChart } from "../components/PerformanceChart";
 import { MyPieChart } from "../components/PerformanceChart";
+import {  Rating } from "../components/Rating";
 const Performance = () => {
   return (
     <div className="flex">
@@ -10,6 +11,7 @@ const Performance = () => {
         <div className="bg-white p-6 rounded shadow">
           <PerformanceChart />
           <MyPieChart/>
+          <Rating/>
         </div>
       </div>
     </div>

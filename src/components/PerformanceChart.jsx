@@ -23,6 +23,8 @@ const data = [
 ];
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+    
+
   export const  MyPieChart = () => {
       return (
         <ResponsiveContainer width="100%" height={400}>
@@ -44,6 +46,8 @@ const data = [
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
+
+        
       );
     }
 export const PerformanceChart = () => {

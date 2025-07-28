@@ -83,9 +83,13 @@ const Product = () => {
     <div className="min-h-screen bg-gray-100 p-4">
 
       <br /><br /><br/>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 px-2">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 px-2 hover:scale">
         <h2 className="text-3xl font-bold text-center w-full sm:w-auto">Product Categories</h2>
-
+        <NavLink to="/">
+          <button className="bg-red-500 text-white px-9 py-2 rounded-md hover:bg-red-600 transition duration-200">
+            Go Back
+          </button>
+        </NavLink>
         <div className="flex gap-3 items-center justify-center">
           <select
             className="p-2 border rounded shadow bg-white"
@@ -99,7 +103,7 @@ const Product = () => {
               </option>
             ))}
           </select>
-
+       
           <NavLink
             to="/add-product"
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -111,8 +115,8 @@ const Product = () => {
 
       {categoryProducts.map(({ category, products }) => (
         <div key={category} className="mb-10">
-          <h3 className="text-2xl font-semibold mb-3 capitalize">{category}</h3>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+          <h3 className="text-2xl font-semibold mb-3 capitalize ">{category}</h3>
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 ">
             {products.map((product) => (
               <div
                 key={product.id}
@@ -152,11 +156,7 @@ const Product = () => {
       ))}
 
       <div className="text-center mt-6">
-        <NavLink to="/">
-          <button className="bg-red-500 text-white px-9 py-2 rounded-md hover:bg-red-600 transition duration-200">
-            Go Back
-          </button>
-        </NavLink>
+      
       </div>
 
  

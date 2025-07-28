@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-
+import { NavLink } from "react-router-dom";
 const ManageShop = () => {
   const [shop, setShop] = useState({ name: "", description: "" });
 
@@ -25,6 +25,7 @@ const ManageShop = () => {
       
       <div className="flex-1 p-6">
         <br/><br/><br/><br/>
+      
         <h2 className="text-2xl font-bold mb-4">Manage Your Shop</h2>
         <div className="space-y-4 bg-white p-6 rounded shadow max-w-xl">
           <input
@@ -43,10 +44,15 @@ const ManageShop = () => {
           />
           <button
             onClick={handleSave}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-blue-600 text-white px-5 py-2 gap-2 rounded"
           >
             Save Shop
           </button>
+            <NavLink to="/">
+                  <button className="bg-red-500 text-white px-9 py-2 rounded-md hover:bg-red-600 transition duration-200">
+                    Go Back
+                  </button>
+                </NavLink>
         </div>
       </div>
     </div>

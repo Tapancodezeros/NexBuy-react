@@ -37,6 +37,12 @@ const SingleProduct = () => {
     <div className="min-h-screen bg-gray-100">
 
       <div className="max-w-4xl mx-auto p-6 bg-white mt-10 rounded shadow">
+        <NavLink
+              to="/product"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-fit mx-80"
+            >
+              Back to Product List
+            </NavLink>
         <div
                 key={product.id}
                 className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
@@ -49,21 +55,17 @@ const SingleProduct = () => {
           <div className="flex flex-col gap-4">
             <h2 className="text-3xl font-bold">{product.title}</h2>
             <p className="text-gray-600 capitalize">{product.category}</p>
-            <p className="text-lg font-medium">{product.description}</p>
+            <p className="text-lg font-small">{product.description}</p>
             <div className="flex justify-between items-center">
               <span className="text-2xl font-bold text-green-600">₹{product.price*60}</span>
               {product.rating && (
                 <span className="text-sm bg-yellow-100 px-2 py-1 rounded text-yellow-800">
                   ⭐ {product.rating.rate}
+                     /{product.rating.count}
                 </span>
               )}
             </div>
-            <NavLink
-              to="/product"
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-fit mx-80"
-            >
-              Back to Product List
-            </NavLink>
+            
           </div>
         </div>
       </div>
