@@ -1,6 +1,6 @@
-// src/services/productService.js
+
 import axios from "axios";
-import Product from "../Pages/Product";
+import Product from "../Pages/Product/Product";
 
 const API_BASE = "https://fakestoreapi.com";
 
@@ -11,6 +11,7 @@ export const fetchProducts = async () => {
 
 export const fetchCategories = async () => {
   const res = await axios.get(`${API_BASE}/products/categories`);
+  
   return res.data;
 };
 
