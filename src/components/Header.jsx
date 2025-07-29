@@ -31,7 +31,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="backdrop-blur bg-white/80 border-b shadow-sm fixed top-0 left-0 w-full z-50">
+    <header className="backdrop-blur bg-white/120 border-b shadow-sm fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <div onClick={() => navigate("/")} className="cursor-pointer">
@@ -58,7 +58,6 @@ export const Header = () => {
                 Home
               </button>
             </li>
-
             {/* About Dropdown */}
             <li className="relative group">
               <button
@@ -99,6 +98,7 @@ export const Header = () => {
               </ul>
             </li>
 
+          
             {isLoggedIn ? (
               <>
                 <li>
@@ -116,6 +116,7 @@ export const Header = () => {
                     Performance
                   </button>
                 </li>
+
 
                 {/* Profile Dropdown */}
                 <li className="relative group">
@@ -160,6 +161,7 @@ export const Header = () => {
               </>
             ) : (
               <>
+              
                 <li>
                   <button className={buttonClass("/login", "blue")} onClick={() => navigate("/login")}>
                     Login

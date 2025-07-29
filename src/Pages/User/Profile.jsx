@@ -27,8 +27,8 @@ const Profile = () => {
   if (!user) return <div className="text-center mt-10 text-red-500">User not found</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6">
+    <div className="min-h-svh bg-gray-200 flex items-center justify-center px-18">
+      <div className="w-full max-w-md bg-blue-100 rounded-xl shadow-purple-700 p-8">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 flex items-center justify-center gap-2">
           <FaUserCircle className="text-3xl text-blue-600" />
           Profile
@@ -51,7 +51,7 @@ const Profile = () => {
         <div className="mt-6 text-center">
          <NavLink to="/">
           <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-              ⏮️Go Back
+              Go Back
             </button>
           </NavLink>
         </div>

@@ -37,7 +37,7 @@ function About() {
      <div className="flex items-center justify-center ">
           <NavLink to="/">
             <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-              ⏮️Go Back
+              Go Back
             </button>
           </NavLink>
         </div>

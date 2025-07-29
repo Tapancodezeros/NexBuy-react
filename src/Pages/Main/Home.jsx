@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("token"); // or "user", depending on your app
+  const isLoggedIn = localStorage.getItem("token"); 
 
   const handleClick = () => {
     navigate(isLoggedIn ? "/product" : "/login");

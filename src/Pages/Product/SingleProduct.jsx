@@ -41,7 +41,7 @@ const SingleProduct = () => {
           to="/product"
           className="inline-flex items-center mb-6 text-sm font-semibold text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition"
         >
-          ⏮️Back to Product List
+           Back to Product List
         </NavLink>
 
         <div className="grid md:grid-cols-2 gap-10 items-start">

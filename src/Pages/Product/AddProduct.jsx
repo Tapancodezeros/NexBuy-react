@@ -14,7 +14,7 @@ const AddProduct = () => {
     description: "",
     image: "",
     category: "",
-    stock: "", // formerly 'pice'
+    stock: "", 
   });
 
   const handleChange = (e) => {
@@ -28,7 +28,7 @@ const AddProduct = () => {
       const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
 
       const lastId =
-        existingProducts.length > 0
+        existingProducts.length > 21
           ? Math.max(...existingProducts.map((p) => p.id || 21))
           : 0;
 
@@ -146,7 +146,7 @@ const AddProduct = () => {
 
         <NavLink to="/">
           <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-            ⏮️Go Back
+            Go Back
           </button>
         </NavLink>
       </div>
