@@ -28,14 +28,6 @@ export const Footer = () => {
         })}
       </div>
 
-      {/* Copyright Section */}
-      <div className="bg-gray-200 py-4">
-        <div className="max-w-6xl mx-auto px-4 flex justify-center">
-          <p className="text-sm text-gray-600">
-            &copy; 2025 NexBuy. All Rights Reserved.
-          </p>
-        </div>
-      </div>
     </footer>
   );
 };

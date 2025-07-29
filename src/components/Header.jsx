@@ -1,15 +1,19 @@
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
-import logo from "../assets/images/NexGen.png"
+import logo from "../assets/images/NexGen.png";
+
 export const Header = () => {
-  const [show, setShow] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showAboutDropdown, setShowAboutDropdown] = useState(false);
   const isLoggedIn = localStorage.getItem("token");
   const navigate = useNavigate();
-
+  const location = useLocation();
   const currentPath = location.pathname;
-  const handleToggle = () => setShow(!show);
+
+  const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -17,64 +21,89 @@ export const Header = () => {
     navigate("/");
   };
 
-  // Tailwind class generator with active highlight
-  const buttonClass = (path, activeColor = "red", inactiveColor = "blue") => {
+  const buttonClass = (path, activeColor = "blue", inactiveColor = "gray") => {
     const isActive = currentPath === path;
-    return `px-4 py-2 rounded font-medium transition-colors duration-200 ${
+    return `px-4 py-2 rounded-full transition-colors duration-200 font-semibold ${
       isActive
-        ? `bg-${activeColor}-700 text-white`
-        : `bg-${inactiveColor}-600 text-white hover:bg-${inactiveColor}-700`
+        ? `bg-${activeColor}-600 text-white shadow`
+        : `text-${inactiveColor}-700 hover:bg-${inactiveColor}-100`
     }`;
   };
 
   return (
-    <header className="bg-gray-800 shadow-md fixed top-0 left-0 w-full z-20">
-      <div className="container mx-auto px-3 py-4 flex items-center justify-between">
+    <header className="backdrop-blur bg-white/80 border-b shadow-sm fixed top-0 left-0 w-full z-50">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <a className="text-black h-16 justify-items-center text-l font-medium rounded-md transition-colors" onClick={() => navigate("/")}>
-          <img src={logo} alt="profile" className="h-16 w-25 rounded-full">
-          </img>
-        </a>
+        <div onClick={() => navigate("/")} className="cursor-pointer">
+          <img src={logo} alt="logo" className="h-12 w-24 rounded-lg shadow-sm" />
+        </div>
 
-
-        {/* Hamburger Icon - Mobile */}
+        {/* Hamburger (Mobile) */}
         <div
-          className="md:hidden text-2xl text-gray-300 cursor-pointer"
-          onClick={handleToggle}
+          className="md:hidden text-3xl text-gray-700 cursor-pointer"
+          onClick={toggleMobileMenu}
         >
           <GiHamburgerMenu />
         </div>
 
-        {/* Navigation Menu */}
-        <nav
-          className={`absolute md:static top-full left-0 w-full md:w-auto bg-gray-800 md:bg-transparent shadow-md md:shadow-none transition-all duration-300 ease-in-out z-40 ${
-            show ? "block" : "hidden md:block"
-          }`}
+        {/* Nav Links */}
+        <div
+          className={`md:flex md:items-center md:gap-6 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible ${
+            showMobileMenu ? "max-h-[1000px] py-4" : "max-h-0"
+          } md:max-h-none w-full md:w-auto`}
         >
-          <ul className="flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-0">
+          <ul className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 px-4 md:px-0 text-sm font-medium text-gray-700">
             <li>
-              <button className={buttonClass("/","blue")} onClick={() => navigate("/")}>
+              <button className={buttonClass("/", "blue")} onClick={() => navigate("/")}>
                 Home
               </button>
             </li>
-          
-            <li>
-              <button className={buttonClass("/about", "blue")} onClick={() => navigate("/about")}>
-                About
+
+            {/* About Dropdown */}
+            <li className="relative group">
+              <button
+                onClick={() => setShowAboutDropdown(!showAboutDropdown)}
+                className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
+              >
+                About Us {showAboutDropdown ? "▲" : "▼"}
               </button>
-            </li>
-            <li>
-              <button className={buttonClass("/contact", "blue")} onClick={() => navigate("/contact")}>
-                Contact
-              </button>
+              <ul
+                className={`absolute bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
+                  showAboutDropdown
+                    ? "opacity-100 translate-y-0 scale-100"
+                    : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                }`}
+              >
+                <li>
+                  <button
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+                    onClick={() => {
+                      setShowAboutDropdown(false);
+                      navigate("/about");
+                    }}
+                  >
+                    About
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+                    onClick={() => {
+                      setShowAboutDropdown(false);
+                      navigate("/contact");
+                    }}
+                  >
+                    Contact
+                  </button>
+                </li>
+              </ul>
             </li>
 
-            {/* Conditionally show links if user is logged in */}
             {isLoggedIn ? (
               <>
-                 <li>
+                <li>
                   <button className={buttonClass("/manageshop", "blue")} onClick={() => navigate("/manageshop")}>
-                    ManageShop
+                    Manage Shop
                   </button>
                 </li>
                 <li>
@@ -87,24 +116,46 @@ export const Header = () => {
                     Performance
                   </button>
                 </li>
-                
-                <li>
+
+                {/* Profile Dropdown */}
+                <li className="relative group">
                   <button
-                    className={`${buttonClass("/profile","blue")} flex items-center gap-2`}
-                    onClick={() => navigate("/profile")}
+                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2"
                   >
                     <FaUserCircle className="text-xl" />
-                    
-                    Profile
+                    Profile {showProfileDropdown ? "▲" : "▼"}
                   </button>
-                </li>
-                <li>
-                  <button
-                    className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-                    onClick={handleLogout}
+                  <ul
+                    className={`absolute right-0 bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
+                      showProfileDropdown
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                    }`}
                   >
-                    Logout
-                  </button>
+                    <li>
+                      <button
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+                        onClick={() => {
+                          setShowProfileDropdown(false);
+                          navigate("/profile");
+                        }}
+                      >
+                        View Profile
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors"
+                        onClick={() => {
+                          setShowProfileDropdown(false);
+                          handleLogout();
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
                 </li>
               </>
             ) : (
@@ -119,11 +170,10 @@ export const Header = () => {
                     Register
                   </button>
                 </li>
-                
               </>
             )}
           </ul>
-        </nav>
+        </div>
       </div>
     </header>
   );

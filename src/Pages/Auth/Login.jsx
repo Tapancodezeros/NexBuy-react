@@ -1,8 +1,7 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/authService";
 import { toast } from "react-toastify";
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,93 +9,86 @@ const Login = () => {
   const [password, setPassword] = useState("michaelwpass");
   const [error, setError] = useState("");
   const [storedData, setStoredData] = useState(null);
+
   useEffect(() => {
-    const retrievedData = localStorage.getItem('dummyUser');
+    const retrievedData = localStorage.getItem("dummyUser");
     if (retrievedData) {
       setStoredData(JSON.parse(retrievedData));
     }
-  }, []); // Empty dependency array ensures effect runs only once on mount
-
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await loginUser(username, password);
-    
       localStorage.setItem("token", res.accessToken);
-      localStorage.setItem("userId",res.id);
-    
-      toast.success(" Login successfully!",{autoClose : 1500});
-      setTimeout(() => navigate("/") );
+      localStorage.setItem("userId", res.id);
+      toast.success("Login successfully!", { autoClose: 1500 });
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
-    
-      toast.error(" Failed to Login");
-
+      toast.error("Failed to login");
     }
-  }; 
+  };
 
   return (
-    <div>
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-
-      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
-          Login to NexBuy
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl transition hover:shadow-2xl">
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Login to <span className="text-gray-800">NexBuy</span>
         </h2>
 
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-      
+        {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-        
-            <label className="block text-sm font-medium text-gray-700">
+        <form onSubmit={handleLogin} className="space-y-6">
+          {/* Username */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Username
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Username"
+              placeholder="Enter your username"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition duration-150"
             />
           </div>
 
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Password"
+              placeholder="Enter your password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition duration-150"
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition transform hover:scale-[1.02] duration-200"
           >
             Login
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center">
+        {/* Redirect */}
+        <p className="mt-6 text-sm text-center text-gray-600">
           Don’t have an account?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-blue-600 hover:underline cursor-pointer"
+            className="text-blue-600 font-medium hover:underline cursor-pointer"
           >
             Register
           </span>
         </p>
       </div>
     </div>
-
- </div>
-
   );
 };
 

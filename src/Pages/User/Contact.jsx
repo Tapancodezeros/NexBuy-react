@@ -11,10 +11,9 @@ const Contact = () => {
   return (
     <section className="min-h-screen bg-gray-100 py-10">
   
-      <br/>
   
 
-      <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg">
+      <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg my-20">
         <form onSubmit={handleFormSubmit} className="space-y-6">
               <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>
           <input
@@ -52,9 +51,9 @@ const Contact = () => {
         </form>
 
         <div className="text-center mt-6">
-          <NavLink to="/" className="inline-block">
-            <button className="bg-red-500 text-white px-5 py-2 rounded-md hover:bg-red-600 transition-all duration-200">
-              Go Back
+          <NavLink to="/">
+            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
+              ⏮️Go Back
             </button>
           </NavLink>
         </div>
