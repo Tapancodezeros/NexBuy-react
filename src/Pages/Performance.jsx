@@ -34,7 +34,7 @@ const Performance = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 my-30">
+    <div className="min-h-screen bg-gray-50 px-4 py-8 my-15">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
           Product Performance Dashboard
@@ -87,12 +87,14 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
         </div>
+      <div className="flex items-center justify-center my-15">
         <NavLink to="/">
-          <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
+          <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition ">
             Go Back
           </button>
         </NavLink>
       </div>
+    </div>
     </div>
   );
 };

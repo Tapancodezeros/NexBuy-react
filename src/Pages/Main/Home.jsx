@@ -22,9 +22,8 @@ function Home() {
           next-generation e-commerce destination.
         </p>
 
-        <button
-          onClick={handleClick}
-          className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 text-lg font-medium rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
+        <button onClick={handleClick} className="mt-4 inline-block
+         bg-blue-500 text-white px-6 py-3 text-lg font-medium rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
         >
           {isLoggedIn ? "Browse Products" : "Login to Continue"}
         </button>

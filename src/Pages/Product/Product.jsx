@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   fetchCategories,
   fetchProductsByCategory,
-} from "../../api/productService";
+} from "../../api/apiService";
 import { NavLink } from "react-router-dom";
 
 const Product = () => {
@@ -82,7 +82,7 @@ const Product = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-6 my-18">
+    <div className="min-h-screen bg-gray-100 px-4 py-6 my-14">
       <div className="max-w-7xl mx-auto">
         {/* Top Controls */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
@@ -94,7 +94,7 @@ const Product = () => {
 
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <select
-              className="p-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               value={selectedCat}
               onChange={handleChange}
             >
@@ -105,7 +105,7 @@ const Product = () => {
                 </option>
               ))}
             </select>
-
+         
             <NavLink
               to="/add-product"
               className="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition"
@@ -124,7 +124,7 @@ const Product = () => {
 
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {products.map((product) => (
-                <NavLink key={product.id} to={`/product/${product.id}`} className="bg-white rounded-2xl shadow hover:shadow-blue-600 transition overflow-hidden flex flex-col cursor-pointer">
+                <NavLink key={product.id} to={`/product/${product.id}`} className="bg-white rounded-2xl shadow hover:shadow-blue-600/60 transition overflow-hidden flex flex-col cursor-pointer">
                   <img
                     src={product.image}
                     alt={product.title}
@@ -157,7 +157,7 @@ const Product = () => {
                       </div>
                     </div>
 
-                    <div className="mt-4 text-center">
+                    <div className="flex items-center justify-center my-5">
                       <div className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm w-fit mx-auto">
                         View Product
                       </div>

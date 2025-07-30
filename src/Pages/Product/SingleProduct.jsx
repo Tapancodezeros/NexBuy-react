@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
-import { fetchProductById } from "../../api/productService";
+import { fetchProductById } from "../../api/apiService";
 
 const SingleProduct = () => {
   const { id } = useParams();

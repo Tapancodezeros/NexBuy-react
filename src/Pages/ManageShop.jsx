@@ -4,14 +4,13 @@ import { NavLink } from "react-router-dom";
 const ManageShop = () => {
   const [shop, setShop] = useState({ name: "", description: "" });
   const [errors, setErrors] = useState({ name: "", description: "" });
-  const [savedShop, setSavedShop] = useState(null);
+  const [allShops, setAllShops] = useState([]);
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("shop");
+    const saved = localStorage.getItem("shops");
     if (saved) {
-      const parsed = JSON.parse(saved);
-      setSavedShop(parsed);
+      setAllShops(JSON.parse(saved));
     }
   }, []);
 
@@ -42,20 +41,27 @@ const ManageShop = () => {
   const handleSave = () => {
     if (!validate()) return;
 
-    localStorage.setItem("shop", JSON.stringify(shop));
-    setSavedShop(shop);
-    setSuccessMsg("✅ Shop details saved successfully!");
-
-    // Reset form after save
+    const updatedShops = [...allShops, shop];
+    localStorage.setItem("shops", JSON.stringify(updatedShops));
+    setAllShops(updatedShops);
+    setSuccessMsg("✅ Shop added successfully!");
     setShop({ name: "", description: "" });
     setErrors({ name: "", description: "" });
+  };
+
+  const handleDelete = (index) => {
+    const updatedShops = [...allShops];
+    updatedShops.splice(index, 1);
+    localStorage.setItem("shops", JSON.stringify(updatedShops));
+    setAllShops(updatedShops);
+    setSuccessMsg("🗑️ Shop deleted successfully!");
   };
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4 my-17">
       <div className="max-w-xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Manage Your Shop
+          Manage Your Shops
         </h2>
 
         <div className="bg-white p-6 rounded-xl shadow-md space-y-5">
@@ -93,7 +99,7 @@ const ManageShop = () => {
           </div>
 
           {successMsg && (
-            <div className="text-green-600 font-medium bg-green-100 p-3 rounded">
+            <div className="text-green-600 font-medium bg-green-300 p-3 rounded">
               {successMsg}
             </div>
           )}
@@ -103,22 +109,35 @@ const ManageShop = () => {
               onClick={handleSave}
               className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto"
             >
-              Save Shop
+              Add Shop
             </button>
 
-          <NavLink to="/">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-              Go Back
-            </button>
-          </NavLink>
+            <NavLink to="/">
+              <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
+                Go Back
+              </button>
+            </NavLink>
           </div>
         </div>
 
-        {savedShop && (
-          <div className="mt-10 bg-white p-6 rounded-xl shadow space-y-2">
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">📋 Your Shop Details</h3>
-            <p><span className="font-medium text-gray-700">Name:</span> {savedShop.name}</p>
-            <p><span className="font-medium text-gray-700">Description:</span> {savedShop.description}</p>
+        {/* List of shops with delete option */}
+        {allShops.length > 0 && (
+          <div className="mt-10 bg-white p-6 rounded-xl shadow space-y-4">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">🛒 Your Shops</h3>
+            {allShops.map((s, idx) => (
+              <div key={idx} className="border-b border-gray-200 pb-3 flex justify-between items-start">
+                <div>
+                  <p><span className="font-medium text-gray-700">Name:</span> {s.name}</p>
+                  <p><span className="font-medium text-gray-700">Description:</span> {s.description}</p>
+                </div>
+                <button
+                  onClick={() => handleDelete(idx)}
+                  className="text-red-600 hover:text-red-800 text-sm font-semibold"
+                >
+                  🗑️ Delete
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>

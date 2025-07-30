@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/authService";
+import { loginUser } from "../../api/apiService";
 import { toast } from "react-toastify";
 
 const Login = () => {
