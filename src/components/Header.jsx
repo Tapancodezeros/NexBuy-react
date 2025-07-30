@@ -26,7 +26,7 @@ export const Header = () => {
     return `px-4 py-2 rounded-full transition-colors duration-200 font-semibold ${
       isActive
         ? `bg-${activeColor}-600 text-white shadow`
-        : `text-${inactiveColor}-700 hover:bg-${inactiveColor}-100`
+        : `text-${inactiveColor}-800 hover:bg-${inactiveColor}-100`
     }`;
   };
 

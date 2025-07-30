@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const ManageShop = () => {
   const [shop, setShop] = useState({ name: "", description: "" });
   const [errors, setErrors] = useState({ name: "", description: "" });
   const [allShops, setAllShops] = useState([]);
   const [successMsg, setSuccessMsg] = useState("");
-
+  
   useEffect(() => {
     const saved = localStorage.getItem("shops");
     if (saved) {
@@ -44,7 +44,7 @@ const ManageShop = () => {
     const updatedShops = [...allShops, shop];
     localStorage.setItem("shops", JSON.stringify(updatedShops));
     setAllShops(updatedShops);
-    setSuccessMsg("✅ Shop added successfully!");
+    toast.success("shop added successfully!", { autoClose: 1500 })
     setShop({ name: "", description: "" });
     setErrors({ name: "", description: "" });
   };
@@ -54,7 +54,7 @@ const ManageShop = () => {
     updatedShops.splice(index, 1);
     localStorage.setItem("shops", JSON.stringify(updatedShops));
     setAllShops(updatedShops);
-    setSuccessMsg("🗑️ Shop deleted successfully!");
+    toast.info("🗑️ Shop deleted successfully!", { autoClose: 1500 });
   };
 
   return (

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { signUpSchema } from "../../schemas/index";
 import { useNavigate, Link } from "react-router-dom";
 import userimg from "../../assets/images/Free.png";
+import { toast } from "react-toastify";
 
 const initialValues = {
   name: "",
@@ -33,6 +34,14 @@ const Register = () => {
       navigate("/login");
     },
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      toast.error("User already logged in");
+      navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">

@@ -28,9 +28,9 @@ const AddProduct = () => {
       const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
 
       const lastId =
-        existingProducts.length > 21
-          ? Math.max(...existingProducts.map((p) => p.id || 21))
-          : 0;
+        existingProducts.length >= 21
+          ? Math.max(...existingProducts.map((p) => p.id || 30))
+          : 20;
 
       const newProduct = {
         ...product,
@@ -44,6 +44,8 @@ const AddProduct = () => {
           count: Math.floor(Math.random() * 100) + 1,
         },
       };
+        console.log("🚀 ~ handleSubmit ~ newProduct.id:", newProduct.id)
+      console.log("🚀 ~ handleSubmit ~ newProduct:", newProduct)
 
       localStorage.setItem("products", JSON.stringify([...existingProducts, newProduct]));
 

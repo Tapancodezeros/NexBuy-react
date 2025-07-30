@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  
+  Area,
+  AreaChart,
   LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
   ResponsiveContainer,
   PieChart,
   Pie,
@@ -28,7 +30,7 @@ const Performance = () => {
   }, []);
 
   const data = products.map((p, index) => ({
-    name: p.title.length > 20 ? p.title.slice(0, 15) + "..." : p.title,
+    name: p.title.length > 20 ? p.title.slice(0, 10) + "..." : p.title,
     rating: p.rating.rate,
     color: COLORS[index % COLORS.length],
   }));
@@ -40,44 +42,30 @@ const Performance = () => {
           Product Performance Dashboard
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Line Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          {/* <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product Ratings (Line Chart)
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
+            <ResponsiveContainer width="100%" height={400}>
+               <LineChart data={data}> 
                 <XAxis dataKey="name" />
                 <YAxis domain={[0, 5]} />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="rating"
-                  stroke="#3b82f6" // Blue-500
-                  strokeWidth={2}
-                />
+               
+                <Line type="monotone" dataKey="rating" stroke="#8884d8" strokeWidth={4} fill="66CDAA"/>
               </LineChart>
             </ResponsiveContainer>
-          </div>
+          </div> */}
 
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              Ratings Distribution (Pie Chart)
+              Display product-wise Ratings  (Pie Chart)
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={400}>
               <PieChart>
-                <Pie
-                  data={data}
-                  dataKey="rating"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={110}
-                  label
-                >
+                  <Pie dataKey="rating" nameKey="name" data={data} cx="50%" cy="50%" innerRadius={100} outerRadius={150} fill="#82ca9d" label>
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -86,16 +74,37 @@ const Performance = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+            <ResponsiveContainer>
+             <AreaChart
+          width={500}
+          height={200}
+          data={data}
+          syncId="anyId"
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+         >
+          <XAxis dataKey="name" />
+           <YAxis domain={[0, 5]} />
+          <Tooltip />
+          <Area type="monotone" dataKey="rating" stroke="#82ca9d" fill="#CC6688" />
+            </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      <div className="flex items-center justify-center my-15">
-        <NavLink to="/">
+      <div className="flex items-center justify-center my-5">
+         <NavLink to="/">
           <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition ">
             Go Back
           </button>
-        </NavLink>
-      </div>
-    </div>
-    </div>
+         </NavLink>
+       </div>
+     </div>
+   </div>
   );
 };
 

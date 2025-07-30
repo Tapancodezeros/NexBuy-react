@@ -16,7 +16,7 @@ const Product = () => {
 
   useEffect(() => {
     const loadInitial = async () => {
-      const cats = await fetchCategories();
+      const cats = await fetchCategoies();
       setCategories(cats);
 
       const apiCategoryWise = await Promise.all(

@@ -18,8 +18,8 @@ function Home() {
 
         <p className="text-lg md:text-2xl text-gray-700 max-w-2xl mb-8 leading-relaxed">
           Experience the future of online shopping with <br/>
-          <span className="font-semibold text-blue-600">NexBuy</span> — your
-          next-generation e-commerce destination.
+          <span className="font-semibold text-blue-600">NexBuy</span>
+           — your next-generation e-commerce destination.
         </p>
 
         <button onClick={handleClick} className="mt-4 inline-block

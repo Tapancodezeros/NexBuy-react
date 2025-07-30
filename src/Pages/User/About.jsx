@@ -18,7 +18,7 @@ function About() {
           />
         </div>
   
-        <div className="space-y-4 text-lg text-gray-700 my-35">
+        <div className="space-y-10 text-lg text-gray-700 my-35">
       
      
           <p>This is the next generation e-commerce store.</p>

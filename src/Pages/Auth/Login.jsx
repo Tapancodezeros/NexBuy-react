@@ -8,14 +8,14 @@ const Login = () => {
   const [username, setUsername] = useState("michaelw");
   const [password, setPassword] = useState("michaelwpass");
   const [error, setError] = useState("");
-  const [storedData, setStoredData] = useState(null);
 
   useEffect(() => {
-    const retrievedData = localStorage.getItem("dummyUser");
-    if (retrievedData) {
-      setStoredData(JSON.parse(retrievedData));
+    const token = localStorage.getItem("token");
+    if (token) {
+      toast.error("User already logged in");
+      navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +24,7 @@ const Login = () => {
       localStorage.setItem("token", res.accessToken);
       localStorage.setItem("userId", res.id);
       toast.success("Login successfully!", { autoClose: 1500 });
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate("/"), 1000); // Redirect to product
     } catch (err) {
       toast.error("Failed to login");
     }
