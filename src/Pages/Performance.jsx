@@ -34,7 +34,12 @@ const Performance = () => {
     rating: p.rating.rate,
     color: COLORS[index % COLORS.length],
   }));
-
+const data1 = products.map((p, index) => ({
+    name: p.title.length > 20 ? p.title.slice(0, 10) + "..." : p.title,
+    
+    count: p.rating.count,
+    color: COLORS[index % COLORS.length],
+  }));
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 my-15">
       <div className="max-w-6xl mx-auto">
@@ -43,8 +48,8 @@ const Performance = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Line Chart */}
-          {/* <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          {/* Line Chart */} 
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product Ratings (Line Chart)
             </h3>
@@ -53,10 +58,10 @@ const Performance = () => {
                 <XAxis dataKey="name" />
                 <YAxis domain={[0, 5]} />
                
-                <Line type="monotone" dataKey="rating" stroke="#8884d8" strokeWidth={4} fill="66CDAA"/>
+                <Line type="monotone" dataKey="rating" stroke="#8884d8" strokeWidth={4} fill="66CDAA" />
               </LineChart>
             </ResponsiveContainer>
-          </div> */}
+          </div>
 
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
@@ -65,16 +70,21 @@ const Performance = () => {
             </h3>
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
-                  <Pie dataKey="rating" nameKey="name" data={data} cx="50%" cy="50%" innerRadius={100} outerRadius={150} fill="#82ca9d" label>
+                  <Pie dataKey="count"  nameKey="name" data={data1} cx="30%" cy="30%" innerRadius={40} outerRadius={90} fill="#82ca9d" label>
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
+                <Pie dataKey="rating" data={data} cx={"68%"} cy={"65%"} innerRadius={40} outerRadius={70} fill="#82ca9d" label>
+                   {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                     ))}
+                  </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          {/* <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
             <ResponsiveContainer>
              <AreaChart
           width={500}
@@ -94,12 +104,12 @@ const Performance = () => {
           <Area type="monotone" dataKey="rating" stroke="#82ca9d" fill="#CC6688" />
             </AreaChart>
             </ResponsiveContainer>
-          </div>
+          </div> */}
         </div>
       <div className="flex items-center justify-center my-5">
          <NavLink to="/">
           <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition ">
-            Go Back
+            ⬅️Go Back
           </button>
          </NavLink>
        </div>

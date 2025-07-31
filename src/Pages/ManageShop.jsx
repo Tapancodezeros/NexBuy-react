@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const ManageShop = () => {
   const [shop, setShop] = useState({ name: "", description: "" });
   const [errors, setErrors] = useState({ name: "", description: "" });
   const [allShops, setAllShops] = useState([]);
-  const [successMsg, setSuccessMsg] = useState("");
-  
+  const [editIndex, setEditIndex] = useState(null);
+
   useEffect(() => {
     const saved = localStorage.getItem("shops");
     if (saved) {
@@ -17,7 +18,6 @@ const ManageShop = () => {
   const handleChange = (e) => {
     setShop({ ...shop, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
-    setSuccessMsg("");
   };
 
   const validate = () => {
@@ -41,11 +41,29 @@ const ManageShop = () => {
   const handleSave = () => {
     if (!validate()) return;
 
-    const updatedShops = [...allShops, shop];
-    localStorage.setItem("shops", JSON.stringify(updatedShops));
-    setAllShops(updatedShops);
-    toast.success("shop added successfully!", { autoClose: 1500 })
+    // Limit to 6 shops only when adding a new one
+    if (editIndex === null && allShops.length >= 6) {
+      toast.error("You can only add up to 6 shops.", { autoClose: 2000 });
+      return;
+    }
+
+    if (editIndex !== null) {
+      // Edit Mode
+      const updatedShops = [...allShops];
+      updatedShops[editIndex] = shop;
+      localStorage.setItem("shops", JSON.stringify(updatedShops));
+      setAllShops(updatedShops);
+      toast.success("Shop updated successfully!", { autoClose: 1500 });
+    } else {
+      // Add Mode
+      const updatedShops = [...allShops, shop];
+      localStorage.setItem("shops", JSON.stringify(updatedShops));
+      setAllShops(updatedShops);
+      toast.success("Shop added successfully!", { autoClose: 1500 });
+    }
+
     setShop({ name: "", description: "" });
+    setEditIndex(null);
     setErrors({ name: "", description: "" });
   };
 
@@ -54,7 +72,17 @@ const ManageShop = () => {
     updatedShops.splice(index, 1);
     localStorage.setItem("shops", JSON.stringify(updatedShops));
     setAllShops(updatedShops);
-    toast.info("🗑️ Shop deleted successfully!", { autoClose: 1500 });
+    toast.info("❌ Shop deleted successfully!", { autoClose: 1500 });
+
+    if (editIndex === index) {
+      setShop({ name: "", description: "" });
+      setEditIndex(null);
+    }
+  };
+
+  const handleEdit = (index) => {
+    setShop(allShops[index]);
+    setEditIndex(index);
   };
 
   return (
@@ -98,44 +126,60 @@ const ManageShop = () => {
             )}
           </div>
 
-          {successMsg && (
-            <div className="text-green-600 font-medium bg-green-300 p-3 rounded">
-              {successMsg}
-            </div>
+          {editIndex === null && allShops.length >= 6 && (
+            <p className="text-red-600 font-medium text-sm">
+              ❌ You have reached the maximum limit of 6 shops.
+            </p>
           )}
 
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <button
               onClick={handleSave}
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto"
+              disabled={editIndex === null && allShops.length >= 6}
+              className={`${
+                editIndex === null && allShops.length >= 6
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } text-white px-5 py-2 rounded-lg transition w-full sm:w-auto`}
             >
-              Add Shop
+              {editIndex !== null ? "🔄Update Shop" : "✚Add Shop"}
             </button>
 
             <NavLink to="/">
               <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-                Go Back
+                ⬅️Go Back
               </button>
             </NavLink>
           </div>
         </div>
 
-        {/* List of shops with delete option */}
+        {/* List of shops with edit/delete option */}
         {allShops.length > 0 && (
           <div className="mt-10 bg-white p-6 rounded-xl shadow space-y-4">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">🛒 Your Shops</h3>
             {allShops.map((s, idx) => (
-              <div key={idx} className="border-b border-gray-200 pb-3 flex justify-between items-start">
+              <div
+                key={idx}
+                className="border-b border-gray-200 pb-3 flex justify-between items-start gap-2"
+              >
                 <div>
                   <p><span className="font-medium text-gray-700">Name:</span> {s.name}</p>
                   <p><span className="font-medium text-gray-700">Description:</span> {s.description}</p>
                 </div>
-                <button
-                  onClick={() => handleDelete(idx)}
-                  className="text-red-600 hover:text-red-800 text-sm font-semibold"
-                >
-                  🗑️ Delete
-                </button>
+                <div className="flex flex-col gap-1 items-end text-m font-semibold">
+                  <button
+                    onClick={() => handleEdit(idx)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(idx)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    ❌Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>

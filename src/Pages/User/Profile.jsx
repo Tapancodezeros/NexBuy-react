@@ -56,7 +56,7 @@ const Profile = () => {
         <div className="flex items-center justify-center mt-8">
           <NavLink to="/">
             <button className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300 shadow-md">
-              ⬅ Go Back
+              ⬅️ Go Back
             </button>
           </NavLink>
         </div>
