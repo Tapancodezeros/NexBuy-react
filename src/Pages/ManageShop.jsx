@@ -41,21 +41,18 @@ const ManageShop = () => {
   const handleSave = () => {
     if (!validate()) return;
 
-    // Limit to 6 shops only when adding a new one
     if (editIndex === null && allShops.length >= 6) {
       toast.error("You can only add up to 6 shops.", { autoClose: 2000 });
       return;
     }
 
     if (editIndex !== null) {
-      // Edit Mode
       const updatedShops = [...allShops];
       updatedShops[editIndex] = shop;
       localStorage.setItem("shops", JSON.stringify(updatedShops));
       setAllShops(updatedShops);
       toast.success("Shop updated successfully!", { autoClose: 1500 });
     } else {
-      // Add Mode
       const updatedShops = [...allShops, shop];
       localStorage.setItem("shops", JSON.stringify(updatedShops));
       setAllShops(updatedShops);
@@ -68,6 +65,9 @@ const ManageShop = () => {
   };
 
   const handleDelete = (index) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this shop?");
+    if (!confirmDelete) return;
+
     const updatedShops = [...allShops];
     updatedShops.splice(index, 1);
     localStorage.setItem("shops", JSON.stringify(updatedShops));
@@ -142,18 +142,17 @@ const ManageShop = () => {
                   : "bg-blue-600 hover:bg-blue-700"
               } text-white px-5 py-2 rounded-lg transition w-full sm:w-auto`}
             >
-              {editIndex !== null ? "🔄Update Shop" : "✚Add Shop"}
+              {editIndex !== null ? "🔄 Update Shop" : "✚ Add Shop"}
             </button>
 
             <NavLink to="/">
               <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-                ⬅️Go Back
+                ⬅️ Go Back
               </button>
             </NavLink>
           </div>
         </div>
 
-        {/* List of shops with edit/delete option */}
         {allShops.length > 0 && (
           <div className="mt-10 bg-white p-6 rounded-xl shadow space-y-4">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">🛒 Your Shops</h3>
@@ -163,8 +162,12 @@ const ManageShop = () => {
                 className="border-b border-gray-200 pb-3 flex justify-between items-start gap-2"
               >
                 <div>
-                  <p><span className="font-medium text-gray-700">Name:</span> {s.name}</p>
-                  <p><span className="font-medium text-gray-700">Description:</span> {s.description}</p>
+                  <p>
+                    <span className="font-medium text-gray-700">Name:</span> {s.name}
+                  </p>
+                  <p>
+                    <span className="font-medium text-gray-700">Description:</span> {s.description}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-1 items-end text-m font-semibold">
                   <button
@@ -177,7 +180,7 @@ const ManageShop = () => {
                     onClick={() => handleDelete(idx)}
                     className="text-red-600 hover:text-red-800"
                   >
-                    ❌Delete
+                    ❌ Delete
                   </button>
                 </div>
               </div>

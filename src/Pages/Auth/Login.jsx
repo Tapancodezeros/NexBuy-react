@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/apiService";
+import { loginUser } from "../../api/apiService"; // API login function
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -19,14 +19,30 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Step 1: Check local user
+    const dummyUser = JSON.parse(localStorage.getItem("dummyUser"));
+
+    if (
+      dummyUser &&
+      dummyUser.email === username &&
+      dummyUser.password === password
+    ) {
+      localStorage.setItem("token", "local"); // fake token
+      localStorage.setItem("userId", dummyUser.email);
+      toast.success("Logged in with local account!", { autoClose: 1500 });
+      setTimeout(() => navigate("/"), 1000);
+      return;
+    }
+    // Step 2: Try API login
     try {
       const res = await loginUser(username, password);
       localStorage.setItem("token", res.accessToken);
       localStorage.setItem("userId", res.id);
-      toast.success("Login successfully!", { autoClose: 1500 });
-      setTimeout(() => navigate("/"), 1000); // Redirect to product
+      toast.success("Login via API successful!", { autoClose: 1500 });
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
-      toast.error("Failed to login");
+      toast.error("Login failed. Check credentials.");
     }
   };
 
@@ -40,21 +56,20 @@ const Login = () => {
         {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
 
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Username
+              Username or Email
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition duration-150"
+              placeholder="Enter your username or email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
           </div>
 
-          {/* Password */}
+    
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -64,11 +79,10 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition duration-150"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition transform hover:scale-[1.02] duration-200"
@@ -77,7 +91,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Redirect */}
         <p className="mt-6 text-sm text-center text-gray-600">
           Don’t have an account?{" "}
           <span

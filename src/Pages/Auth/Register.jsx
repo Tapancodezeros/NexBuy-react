@@ -15,17 +15,8 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate();
 
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useFormik({
-    initialValues,
-    validationSchema: signUpSchema,
-    onSubmit: (values, action) => {
+  const {values,errors,touched,handleBlur,handleChange,handleSubmit,} = useFormik({initialValues,validationSchema: signUpSchema,
+      onSubmit: (values, action) => {
       const { name, email, password } = values;
       const newUser = { username: name, email, password };
       localStorage.setItem("dummyUser", JSON.stringify(newUser));
@@ -53,7 +44,7 @@ const Register = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Name */}
+          
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name
@@ -77,8 +68,7 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.name}</p>
               )}
             </div>
-
-            {/* Email */}
+          
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -102,8 +92,7 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
-
-            {/* Password */}
+          
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -126,8 +115,7 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.password}</p>
               )}
             </div>
-
-            {/* Confirm Password */}
+          
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
@@ -152,16 +140,14 @@ const Register = () => {
                 </p>
               )}
             </div>
-
-            {/* Submit Button */}
+          
             <button
               type="submit"
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-200"
             >
               Register
             </button>
-
-            {/* Redirect */}
+    
             <p className="text-sm text-center text-gray-600 mt-3">
               Already have an account?{" "}
               <Link to="/login" className="text-blue-600 hover:underline font-medium">

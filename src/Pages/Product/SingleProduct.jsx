@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { fetchProductById } from "../../api/apiService";
 
 const SingleProduct = () => {
   const { id } = useParams(); 
   const [product, setProduct] = useState(null); 
-
+  const navigate = useNavigate();
   useEffect(() => {
     const loadProduct = async () => {
       // Fetch from localStorage if present
@@ -26,7 +26,15 @@ const SingleProduct = () => {
     };
 
     loadProduct();
+
   }, [id]);
+    
+  
+    // Navigate to the edit product page
+    const handleEdit = (id) => {
+      navigate(`/edit-product/${id}`);
+    };
+  
 
  
   if (!product) {
@@ -36,6 +44,8 @@ const SingleProduct = () => {
       </div>
     );
   }
+
+          const isLocal = product.id > 20;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white flex items-center justify-center py-10 px-4">
@@ -91,7 +101,19 @@ const SingleProduct = () => {
                   No Rating
                 </div>
               )}
+                         
             </div>
+             {isLocal && (
+                      <div className=" items-center justify-center flex my-15">
+                        <button
+                          onClick={() => handleEdit(product.id)}
+                          className="bg-yellow-500 px-5 py-3 text-white rounded text-sm"
+                        >
+                          ✏️Edit
+                        </button>
+                      </div>
+                    )}
+
           </div>
         </div>
 

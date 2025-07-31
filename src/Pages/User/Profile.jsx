@@ -6,29 +6,55 @@ import { FaUserCircle } from "react-icons/fa";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(`https://dummyjson.com/users/${userId}`);
-        setUser(response.data);
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      } finally {
+      if (token === "local") {
+        // Get user from localStorage
+        const localUser = JSON.parse(localStorage.getItem("dummyUser"));
+        if (localUser) {
+          setUser({
+            firstName: localUser.username,
+            lastName: "",
+            email: localUser.email,
+            phone: "N/A",
+            username: localUser.username,
+            image: "https://cdn-icons-png.flaticon.com/512/149/149071.png", // default avatar
+          });
+        }
         setLoading(false);
+      } else {
+        try {
+          const response = await axios.get(`https://dummyjson.com/users/${userId}`);
+          setUser(response.data);
+        } catch (error) {
+          console.error("Failed to fetch user profile:", error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
-    if (userId) fetchUserProfile();
-  }, [userId]);
+    if (userId && token) fetchUserProfile();
+  }, [userId, token]);
 
   if (loading) {
-    return <div className="text-center mt-10 text-gray-500 text-lg animate-pulse">Loading profile...</div>;
+    return (
+      <div className="text-center mt-10 text-gray-500 text-lg animate-pulse">
+        Loading profile...
+      </div>
+    );
   }
 
   if (!user) {
-    return <div className="text-center mt-10 text-red-500 text-lg">User not found</div>;
+    return (
+      <div className="text-center mt-10 text-red-500 text-lg">
+        User not found
+      </div>
+    );
   }
 
   return (
@@ -48,9 +74,15 @@ const Profile = () => {
           <h3 className="text-xl font-semibold text-gray-800">
             {user.firstName} {user.lastName}
           </h3>
-          <p className="text-gray-600 text-sm">📧 <span className="font-medium">Email:</span> {user.email}</p>
-          <p className="text-gray-600 text-sm">📱 <span className="font-medium">Phone:</span> {user.phone}</p>
-          <p className="text-gray-600 text-sm">👤 <span className="font-medium">Username:</span> {user.username}</p>
+          <p className="text-gray-600 text-sm">
+            📧 <span className="font-medium">Email:</span> {user.email}
+          </p>
+          <p className="text-gray-600 text-sm">
+            📱 <span className="font-medium">Phone:</span> {user.phone}
+          </p>
+          <p className="text-gray-600 text-sm">
+            👤 <span className="font-medium">Username:</span> {user.username}
+          </p>
         </div>
 
         <div className="flex items-center justify-center mt-8">
