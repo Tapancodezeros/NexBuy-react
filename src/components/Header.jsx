@@ -17,7 +17,9 @@ export const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("contactData");
+
     navigate("/");
   };
 
