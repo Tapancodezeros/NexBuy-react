@@ -46,33 +46,30 @@ const ManageShop = () => {
       return;
     }
 
+    const updatedShops = [...allShops];
     if (editIndex !== null) {
-      const updatedShops = [...allShops];
       updatedShops[editIndex] = shop;
-      localStorage.setItem("shops", JSON.stringify(updatedShops));
-      setAllShops(updatedShops);
-      toast.success("Shop updated successfully!", { autoClose: 1500 });
+      toast.success("✅ Shop updated!", { autoClose: 1500 });
     } else {
-      const updatedShops = [...allShops, shop];
-      localStorage.setItem("shops", JSON.stringify(updatedShops));
-      setAllShops(updatedShops);
-      toast.success("Shop added successfully!", { autoClose: 1500 });
+      updatedShops.push(shop);
+      toast.success("✅ Shop added!", { autoClose: 1500 });
     }
 
+    localStorage.setItem("shops", JSON.stringify(updatedShops));
+    setAllShops(updatedShops);
     setShop({ name: "", description: "" });
     setEditIndex(null);
     setErrors({ name: "", description: "" });
   };
 
   const handleDelete = (index) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this shop?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete this shop?")) return;
 
     const updatedShops = [...allShops];
     updatedShops.splice(index, 1);
     localStorage.setItem("shops", JSON.stringify(updatedShops));
     setAllShops(updatedShops);
-    toast.info("❌ Shop deleted successfully!", { autoClose: 1500 });
+    toast.info("❌ Shop deleted!", { autoClose: 1500 });
 
     if (editIndex === index) {
       setShop({ name: "", description: "" });
@@ -86,39 +83,37 @@ const ManageShop = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4 my-17">
-      <div className="max-w-xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Manage Your Shops
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10 my-15">
+          🏬 Manage Your Shops
         </h2>
 
-        <div className="bg-white p-6 rounded-xl shadow-md space-y-5">
+        <div className="bg-white p-8 rounded-2xl shadow-lg space-y-6">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Shop Name</label>
+            <label className="block text-gray-700 font-semibold mb-2">Shop Name</label>
             <input
               name="name"
               placeholder="Enter shop name"
               value={shop.name}
               onChange={handleChange}
-              className={`w-full p-3 rounded-lg border ${
+              className={`w-full px-4 py-3 rounded-xl border ${
                 errors.name ? "border-red-500" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Shop Description</label>
+            <label className="block text-gray-700 font-semibold mb-2">Shop Description</label>
             <textarea
               name="description"
               placeholder="Describe your shop"
               value={shop.description}
               onChange={handleChange}
-              className={`w-full p-3 rounded-lg border ${
+              className={`w-full px-4 py-3 rounded-xl border ${
                 errors.description ? "border-red-500" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               rows="4"
             />
             {errors.description && (
@@ -127,26 +122,26 @@ const ManageShop = () => {
           </div>
 
           {editIndex === null && allShops.length >= 6 && (
-            <p className="text-red-600 font-medium text-sm">
-              ❌ You have reached the maximum limit of 6 shops.
+            <p className="text-red-600 font-semibold text-sm">
+              ❌ You can only add 6 shops max.
             </p>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <button
               onClick={handleSave}
               disabled={editIndex === null && allShops.length >= 6}
               className={`${
                 editIndex === null && allShops.length >= 6
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              } text-white px-5 py-2 rounded-lg transition w-full sm:w-auto`}
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              } text-white font-medium px-6 py-3 rounded-xl transition-all duration-200 w-full sm:w-auto`}
             >
               {editIndex !== null ? "🔄 Update Shop" : "✚ Add Shop"}
             </button>
 
             <NavLink to="/">
-              <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
+              <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-200">
                 ⬅️ Go Back
               </button>
             </NavLink>
@@ -154,31 +149,31 @@ const ManageShop = () => {
         </div>
 
         {allShops.length > 0 && (
-          <div className="mt-10 bg-white p-6 rounded-xl shadow space-y-4">
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">🛒 Your Shops</h3>
+          <div className="mt-10 bg-white p-8 rounded-2xl shadow-lg space-y-6 ">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">🛍️ Your Shops</h3>
             {allShops.map((s, idx) => (
               <div
                 key={idx}
-                className="border-b border-gray-200 pb-3 flex justify-between items-start gap-2"
+                className="border border-gray-200 rounded-xl p-4 flex justify-between items-start hover:shadow-md transition"
               >
                 <div>
-                  <p>
-                    <span className="font-medium text-gray-700">Name:</span> {s.name}
+                  <p className="text-lg font-semibold text-gray-700">
+                    🏷️ {s.name}
                   </p>
-                  <p>
-                    <span className="font-medium text-gray-700">Description:</span> {s.description}
+                  <p className="text-gray-600 mt-1">
+                    📃 {s.description}
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 items-end text-m font-semibold">
+                <div className="flex flex-col gap-1 text-right">
                   <button
                     onClick={() => handleEdit(idx)}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     ✏️ Edit
                   </button>
                   <button
                     onClick={() => handleDelete(idx)}
-                    className="text-red-600 hover:text-red-800"
+                    className="text-red-600 hover:text-red-800 font-medium"
                   >
                     ❌ Delete
                   </button>
