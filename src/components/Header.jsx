@@ -48,8 +48,8 @@ export const Header = () => {
 
         {/* Nav Links */}
         <div
-          className={`md:flex md:items-center md:gap-6 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible ${
-            showMobileMenu ? "max-h-[1000px] py-4" : "max-h-0"
+          className={`md:flex md:items-center md:gap-2 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible ${
+            showMobileMenu ? "max-h-[1800px] mx-18 py-20" : "max-h-"
           } md:max-h-none w-full md:w-auto`}
         >
           <ul className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 px-4 md:px-0 text-sm font-medium text-gray-700">
@@ -128,7 +128,7 @@ export const Header = () => {
                     Profile {showProfileDropdown ? "▲" : "▼"}
                   </button>
                   <ul
-                    className={`absolute right-0 bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
+                    className={`absolute bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
                       showProfileDropdown
                         ? "opacity-100 translate-y-0 scale-100"
                         : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
