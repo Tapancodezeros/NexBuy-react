@@ -115,7 +115,7 @@ const Performance = () => {
                   dataKey="count"
                   nameKey="name"
                   data={data1}
-                  cx="30%"
+                  cx="35%"
                   cy="30%"
                   innerRadius={40}
                   outerRadius={80}
