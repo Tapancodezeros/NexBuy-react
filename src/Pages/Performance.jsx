@@ -115,11 +115,11 @@ const Performance = () => {
                   dataKey="count"
                   nameKey="name"
                   data={data1}
-                  cx="37%"
+                  cx="41%"
                   cy="30%"
                   innerRadius={40}
                   outerRadius={80}
-                  label
+              
                 >
                   {data.map((entry, index) => (
                     <Cell key={`cell-count-${index}`} fill={entry.color} />
@@ -128,7 +128,7 @@ const Performance = () => {
                 <Pie
                   dataKey="rating"
                   data={data}
-                  cx="72%"
+                  cx="75%"
                   cy="70%"
                   innerRadius={40}
                   outerRadius={70}
