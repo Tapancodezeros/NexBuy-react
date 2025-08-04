@@ -1,22 +1,27 @@
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 const Contact = () => {
+  const navigate = useNavigate();
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formInputData = Object.fromEntries(formData.entries());
-    console.log(formInputData);
+    localStorage.setItem("contactData", JSON.stringify(formInputData));
+    toast.success("Message submitted successfully!");
+    e.target.reset();
   };
 
+  
   return (
     <section className="min-h-screen bg-gray-100 py-10">
-  
-      <br/>
-  
-
-      <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg">
+      <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg my-20">
         <form onSubmit={handleFormSubmit} className="space-y-6">
-              <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>
+          <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>
+
           <input
             type="text"
             className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -51,15 +56,14 @@ const Contact = () => {
           </button>
         </form>
 
-        <div className="text-center mt-6">
-          <NavLink to="/" className="inline-block">
-            <button className="bg-red-500 text-white px-5 py-2 rounded-md hover:bg-red-600 transition-all duration-200">
-              Go Back
+        <div className="text-center mt-6 space-y-3">
+          <NavLink to="/">
+            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600">
+              ⬅️ Go Back
             </button>
           </NavLink>
+          </div>
         </div>
-      </div>
-
     </section>
   );
 };

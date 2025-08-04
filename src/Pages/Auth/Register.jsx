@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { signUpSchema } from "../../schemas/index";
 import { useNavigate, Link } from "react-router-dom";
 import userimg from "../../assets/images/Free.png";
-
+import { toast } from "react-toastify";
 
 const initialValues = {
   name: "",
@@ -14,33 +14,39 @@ const initialValues = {
 
 const Register = () => {
   const navigate = useNavigate();
-  const {values, errors,touched,handleBlur,handleChange,handleSubmit,} = useFormik({
-    initialValues,
-    validationSchema: signUpSchema,
-    onSubmit: (values, action) => {
+
+  const {values,errors,touched,handleBlur,handleChange,handleSubmit,} = useFormik({initialValues,validationSchema: signUpSchema,
+      onSubmit: (values, action) => {
       const { name, email, password } = values;
       const newUser = { username: name, email, password };
       localStorage.setItem("dummyUser", JSON.stringify(newUser));
-      alert("Registered locally. Please login.");
+      alert("🎉 Registered locally. Please login.");
       action.resetForm();
       navigate("/login");
     },
   });
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      toast.error("User already logged in");
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-200 to-white">
- 
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-      
-      <div className="bg-white rounded-xl shadow-lg max-w-4xl w-full grid md:grid-cols-2">
-        {/* Left Form */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-2">
+        {/* Left: Form Section */}
         <div className="p-8 md:p-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Register for NexBuy
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
+            Register for <span className="text-blue-600">NexBuy</span>
           </h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+          
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
@@ -51,16 +57,20 @@ const Register = () => {
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className={`w-full px-4 py-2 border ${
+                  errors.name && touched.name
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="Your Name"
               />
               {errors.name && touched.name && (
                 <p className="text-sm text-red-600 mt-1">{errors.name}</p>
               )}
             </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+          
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -71,16 +81,20 @@ const Register = () => {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className={`w-full px-4 py-2 border ${
+                  errors.email && touched.email
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="example@mail.com"
               />
               {errors.email && touched.email && (
                 <p className="text-sm text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+          
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
@@ -90,16 +104,20 @@ const Register = () => {
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className={`w-full px-4 py-2 border ${
+                  errors.password && touched.password
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="********"
               />
               {errors.password && touched.password && (
                 <p className="text-sm text-red-600 mt-1">{errors.password}</p>
               )}
             </div>
-
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700">
+          
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
               <input
@@ -109,7 +127,11 @@ const Register = () => {
                 value={values.confirm_password}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className={`w-full px-4 py-2 border ${
+                  errors.confirm_password && touched.confirm_password
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="********"
               />
               {errors.confirm_password && touched.confirm_password && (
@@ -118,36 +140,33 @@ const Register = () => {
                 </p>
               )}
             </div>
-
+          
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-200"
             >
               Register
             </button>
-
-            <p className="mt-4 text-sm text-center">
+    
+            <p className="text-sm text-center text-gray-600 mt-3">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-600 hover:underline">
+              <Link to="/login" className="text-blue-600 hover:underline font-medium">
                 Login
               </Link>
             </p>
           </form>
         </div>
 
-        {/* Right Side Image */}
+        {/* Right: Image Section */}
         <div className="hidden md:block">
           <img
             src={userimg}
             alt="Registration illustration"
-            className="object-cover h-full w-full rounded-r-xl"
+            className="h-full w-full object-cover rounded-r-2xl"
           />
         </div>
       </div>
     </div>
-
-</div>
-
   );
 };
 
