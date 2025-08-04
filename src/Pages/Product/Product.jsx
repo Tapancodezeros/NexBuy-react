@@ -120,7 +120,7 @@ const Product = () => {
           </div>
         </div>
 
-        {/* 🔻 Display Products by Category */}
+        {/* Display Products by Category */}
         {categoryProducts.map(({ category, products }) => (
           <div key={category} className="mb-12">
             <h3 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
@@ -179,7 +179,7 @@ const Product = () => {
                       </div>
                     </NavLink>
 
-                    {/* 🛠️ Local Product Edit/Delete */}
+                    {/* Local Product Edit/Delete */}
                     {isLocal && (
                       <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
                         <button
