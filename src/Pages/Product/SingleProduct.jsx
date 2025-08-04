@@ -45,7 +45,7 @@ const SingleProduct = () => {
     );
   }
 
-          const isLocal = product.id > 20;
+  const isLocal = product.id > 20;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white flex items-center justify-center py-10 px-4">

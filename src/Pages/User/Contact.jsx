@@ -10,14 +10,8 @@ const Contact = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formInputData = Object.fromEntries(formData.entries());
-
-    // Store to localStorage
     localStorage.setItem("contactData", JSON.stringify(formInputData));
-
-    // Show toast notification
     toast.success("Message submitted successfully!");
-
-    // Optional: Clear form fields
     e.target.reset();
   };
 
@@ -64,16 +58,12 @@ const Contact = () => {
 
         <div className="text-center mt-6 space-y-3">
           <NavLink to="/">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
+            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600">
               ⬅️ Go Back
             </button>
           </NavLink>
-
-          <div>
-            
           </div>
         </div>
-      </div>
     </section>
   );
 };

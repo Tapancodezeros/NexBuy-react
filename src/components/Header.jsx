@@ -51,7 +51,7 @@ export const Header = () => {
         {/* Nav Links */}
         <div
           className={`md:flex md:items-center md:gap-6 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible ${
-            showMobileMenu ? "max-h-[1800px] py-20" : "max-h-0"
+            showMobileMenu ? "max-h-[2000px] py-20"  : "max-h-0"
           } md:max-h-none w-full md:w-auto`}
         >
           <ul className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 px-4 md:px-0 text-sm font-medium text-gray-700">

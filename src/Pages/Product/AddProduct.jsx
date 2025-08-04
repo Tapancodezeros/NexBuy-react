@@ -126,6 +126,8 @@ const AddProduct = () => {
             className="w-full p-2 border rounded"
           />
 
+          
+
           <select
             name="category"
             value={product.category}

@@ -49,10 +49,10 @@ const ManageShop = () => {
     const updatedShops = [...allShops];
     if (editIndex !== null) {
       updatedShops[editIndex] = shop;
-      toast.success("✅ Shop updated!", { autoClose: 1500 });
+      toast.success("Shop updated!", { autoClose: 1500 });
     } else {
       updatedShops.push(shop);
-      toast.success("✅ Shop added!", { autoClose: 1500 });
+      toast.success("Shop added!", { autoClose: 1500 });
     }
 
     localStorage.setItem("shops", JSON.stringify(updatedShops));

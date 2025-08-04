@@ -88,10 +88,9 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10 my-14">
       <div className="max-w-7xl mx-auto">
-        {/* 🔻 Header Controls */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <NavLink to="/">
-            <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl transition">
+            <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl transition ">
               ⬅️ Go Back
             </button>
           </NavLink>
@@ -120,7 +119,7 @@ const Product = () => {
           </div>
         </div>
 
-        {/* 🔻 Display Products by Category */}
+        {/* Display Products by Category */}
         {categoryProducts.map(({ category, products }) => (
           <div key={category} className="mb-12">
             <h3 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
@@ -179,7 +178,7 @@ const Product = () => {
                       </div>
                     </NavLink>
 
-                    {/* 🛠️ Local Product Edit/Delete */}
+                    {/* Local Product Edit/Delete */}
                     {isLocal && (
                       <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
                         <button
