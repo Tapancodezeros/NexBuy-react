@@ -7,35 +7,30 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Product = () => {
-  const [categoryProducts, setCategoryProducts] = useState([]); // Products grouped by category
-  const [categories, setCategories] = useState([]); // All available categories
-  const [selectedCat, setSelectedCat] = useState("all"); // Selected category in filter
+  const [categoryProducts, setCategoryProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCat, setSelectedCat] = useState("all");
   const navigate = useNavigate();
 
-  // Helper to get locally stored products (created via add-product)
   const getLocalProducts = () => {
     return JSON.parse(localStorage.getItem("products")) || [];
   };
 
-  // Delete product by ID and update localStorage
   const handleDelete = (id) => {
     const updatedProducts = getLocalProducts().filter((p) => p.id !== id);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
     toast.success("🗑️ Product deleted successfully");
-    loadProducts(); // Refresh the displayed products
+    loadProducts();
   };
 
-  // Navigate to edit page for a product
   const handleEdit = (id) => {
     navigate(`/edit-product/${id}`);
   };
 
-  // Load all products: API + local, merged category-wise
   const loadProducts = async () => {
-    const cats = await fetchCategories(); // API call for categories
+    const cats = await fetchCategories();
     setCategories(cats);
 
-    // Get products from API for each category
     const apiCategoryWise = await Promise.all(
       cats.map(async (cat) => {
         const products = await fetchProductsByCategory(cat);
@@ -45,7 +40,6 @@ const Product = () => {
 
     const localProducts = getLocalProducts();
 
-    // Merge API and local products for each category
     const merged = apiCategoryWise.map((group) => {
       const localForCat = localProducts.filter(
         (p) => p.category === group.category
@@ -58,13 +52,9 @@ const Product = () => {
 
     setCategoryProducts(merged);
   };
-
-  // Load products when component mounts
   useEffect(() => {
     loadProducts();
   }, []);
-
-  // Handle dropdown change and load selected category only
   const handleChange = async (e) => {
     const selected = e.target.value;
     setSelectedCat(selected);
@@ -95,7 +85,6 @@ const Product = () => {
             </button>
           </NavLink>
 
-          {/* Category Filter and Add Product */}
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <select
               className="min-w-[180px] p-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -119,7 +108,6 @@ const Product = () => {
           </div>
         </div>
 
-        {/* Display Products by Category */}
         {categoryProducts.map(({ category, products }) => (
           <div key={category} className="mb-12">
             <h3 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
@@ -128,14 +116,13 @@ const Product = () => {
 
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {products.map((product) => {
-                const isLocal = product.id > 20; // Local products have id > 20
+                const isLocal = product.id > 20;
 
                 return (
                   <div
                     key={product.id}
                     className="relative bg-white rounded-2xl shadow-md hover:shadow-blue-500/40 transition-all duration-200 overflow-hidden flex flex-col"
                   >
-                    {/* Product Card Body */}
                     <NavLink to={`/product/${product.id}`}>
                       <img
                         src={product.image}
@@ -151,13 +138,25 @@ const Product = () => {
                             {product.category}
                           </p>
 
-                          {/* Price + Rating */}
+                          {/*  Updated Price and Rating Display */}
                           <div className="mt-2 flex justify-between items-center">
-                            <span className="text-green-600 font-bold text-lg">
-                              ₹
-                              {product.afterdiscountprice ||
-                                (product.price * 83).toFixed(0)}
-                            </span>
+                            <div className="flex flex-col">
+                              {product.afterdiscountprice ? (
+                                <>
+                                  <span className="text-sm text-gray-500 line-through">
+                                    ₹{(product.price).toFixed(0)}
+                                  </span>
+                                  <span className="text-green-600 font-bold text-lg">
+                                    ₹{(product.afterdiscountprice).toFixed(0)}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="text-green-600 font-bold text-lg">
+                                  ₹{(product.price * 83).toFixed(0)}
+                                </span>
+                              )}
+                            </div>
+
                             {product.rating?.rate ? (
                               <span className="text-sm bg-yellow-100 px-2 py-1 rounded text-yellow-800">
                                 ⭐ {product.rating.rate}
@@ -178,7 +177,6 @@ const Product = () => {
                       </div>
                     </NavLink>
 
-                    {/* Local Product Edit/Delete */}
                     {isLocal && (
                       <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
                         <button
