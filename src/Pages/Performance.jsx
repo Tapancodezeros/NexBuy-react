@@ -115,7 +115,7 @@ const Performance = () => {
                   dataKey="count"
                   nameKey="name"
                   data={data1}
-                  cx="35%"
+                  cx="37%"
                   cy="30%"
                   innerRadius={40}
                   outerRadius={80}
@@ -128,7 +128,7 @@ const Performance = () => {
                 <Pie
                   dataKey="rating"
                   data={data}
-                  cx="70%"
+                  cx="72%"
                   cy="70%"
                   innerRadius={40}
                   outerRadius={70}
