@@ -88,7 +88,6 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10 my-14">
       <div className="max-w-7xl mx-auto">
-        {/*  Header Controls */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <NavLink to="/">
             <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl transition ">

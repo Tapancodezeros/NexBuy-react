@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Area,
-  AreaChart,
   LineChart,
   Line,
   XAxis,
@@ -14,7 +12,6 @@ import {
   Cell,
   BarChart,
   Bar,
-  CartesianGrid,
 } from "recharts";
 import { NavLink } from "react-router-dom";
 
@@ -57,7 +54,6 @@ const Performance = () => {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // Product-wise data for charts
   const data = products.map((p, index) => ({
     name: p.title.length > 20 ? p.title.slice(0, 10) + "..." : p.title,
     rating: p.rating.rate,
@@ -71,19 +67,29 @@ const Performance = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center my-15">
-          Product Performance Dashboard
+    <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8 my-15">
+      <div className="max-w-7xl mx-auto">
+        {/* Go Back Button */}
+        <div className="mb-6">
+          <NavLink to="/">
+            <button className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg shadow-sm transition duration-200">
+              ⬅️ Go Back
+            </button>
+          </NavLink>
+        </div>
+
+        {/* Header */}
+        <h2 className="text-4xl font-extrabold text-gray-800 mb-10 text-center">
+          📊 Product Performance Dashboard
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Line Chart: Product Ratings */}
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Line Chart */}
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product Ratings (Line Chart)
             </h3>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height={350}>
               <LineChart data={data}>
                 <XAxis dataKey="name" />
                 <YAxis domain={[0, 5]} />
@@ -92,19 +98,18 @@ const Performance = () => {
                   type="monotone"
                   dataKey="rating"
                   stroke="#8884d8"
-                  strokeWidth={4}
-                  fill="#66CDAA"
+                  strokeWidth={3}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart: Product Ratings & Count */}
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          {/* Pie Chart */}
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product-wise Ratings & Count (Pie Chart)
             </h3>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Pie
                   dataKey="count"
@@ -113,7 +118,7 @@ const Performance = () => {
                   cx="30%"
                   cy="30%"
                   innerRadius={40}
-                  outerRadius={90}
+                  outerRadius={80}
                   label
                 >
                   {data.map((entry, index) => (
@@ -123,8 +128,8 @@ const Performance = () => {
                 <Pie
                   dataKey="rating"
                   data={data}
-                  cx="68%"
-                  cy="65%"
+                  cx="70%"
+                  cy="70%"
                   innerRadius={40}
                   outerRadius={70}
                   label
@@ -138,33 +143,23 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Bar Chart: Category-wise Avg Ratings */}
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition col-span-1 md:col-span-2">
+          {/* Bar Chart */}
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Average Rating by Category (Bar Chart)
             </h3>
-            <ResponsiveContainer width="80%" height={300}>
+            <ResponsiveContainer width="100%" height={350}>
               <BarChart
                 data={categoryAvgRatings}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
-                
                 <XAxis dataKey="category" />
                 <YAxis domain={[0, 5]} />
                 <Tooltip />
-                <Bar dataKey="avgRating" fill="#3b82f6" />
+                <Bar dataKey="avgRating" fill="#3b82f6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
-
-        {/* Go Back Button */}
-        <div className="flex items-center justify-center my-8">
-          <NavLink to="/">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-              ⬅️ Go Back
-            </button>
-          </NavLink>
         </div>
       </div>
     </div>
