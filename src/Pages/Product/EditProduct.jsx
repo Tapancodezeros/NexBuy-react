@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Static categories
 const CATEGORIES = ["electronics", "jewelery", "men's clothing", "women's clothing"];
 
 const EditProduct = () => {
@@ -21,7 +20,6 @@ const EditProduct = () => {
     setProduct(targetProduct);
   }, [id, navigate]);
 
-  // Auto-calculate afterdiscountprice
   useEffect(() => {
     if (!product) return;
 
@@ -163,7 +161,7 @@ const EditProduct = () => {
             type="submit"
             className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-all"
           >
-            ✅ Update Product
+             Update Product
           </button>
         </form>
 

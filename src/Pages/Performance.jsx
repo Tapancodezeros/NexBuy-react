@@ -69,7 +69,7 @@ const Performance = () => {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8 my-15">
       <div className="max-w-7xl mx-auto">
-        {/* Go Back Button */}
+
         <div className="mb-6">
           <NavLink to="/">
             <button className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg shadow-sm transition duration-200">
@@ -78,13 +78,11 @@ const Performance = () => {
           </NavLink>
         </div>
 
-        {/* Header */}
         <h2 className="text-4xl font-extrabold text-gray-800 mb-10 text-center">
           📈 Product Performance Dashboard
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Line Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product Ratings (Line Chart)
@@ -104,7 +102,6 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product-wise Ratings & Count (Pie Chart)
@@ -143,7 +140,6 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Bar Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Average Rating by Category (Bar Chart)
