@@ -12,7 +12,6 @@ export const Footer = () => {
 
   return (
     <footer className="bg-gray-100 text-gray-800 mt-12 border-t border-gray-300">
-      {/* Contact Info Section */}
       <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {footerContact.map((curData, index) => {
           const { icon, title, details } = curData;
@@ -31,7 +30,6 @@ export const Footer = () => {
         })}
       </div>
 
-      {/* Copyright */}
       <div className="border-t border-gray-300 py-6 text-center text-sm text-gray-500">
         © {new Date().getFullYear()} NexBuy. All rights reserved.
       </div>
