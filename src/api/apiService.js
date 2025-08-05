@@ -1,38 +1,46 @@
-// src/api/apiService.js
+
 import axios from "axios";
 
-const FAKESTORE_API = "https://fakestoreapi.com";
-const DUMMYJSON_API = "https://dummyjson.com";
-
-// --- Product APIs (from fakestoreapi.com) ---
 
 export const fetchProducts = async () => {
-  const res = await axios.get(`${FAKESTORE_API}/products`);
-  return res.data;
+  try {
+    const response = await axios.get(`https://fakestoreapi.com/products`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 };
 
 export const fetchCategories = async () => {
-  const res = await axios.get(`${FAKESTORE_API}/products/categories`);
+  const res = await axios.get("https://fakestoreapi.com/products/categories");
   return res.data;
 };
 
 export const fetchProductsByCategory = async (category) => {
-  const res = await axios.get(`${FAKESTORE_API}/products/category/${category}`);
+  const res = await axios.get(`https://fakestoreapi.com/products/category/${category}`);
   return res.data;
 };
 
 export const fetchProductById = async (id) => {
-  const res = await axios.get(`${FAKESTORE_API}/products/${id}`);
-  return res.data;
+  try {
+    const response = await axios.get(`https://fakestoreapi.com/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product with ID ${id}:`, error);
+    return null;
+  }
 };
 
-// --- Auth APIs (from dummyjson.com) ---
-
 export const loginUser = async (username, password) => {
-  const res = await axios.post(`${DUMMYJSON_API}/auth/login`, {
-    username,
-    password,
-  });
-  console.log("Login response:", res.data);
-  return res.data;
+  try {
+    const response = await axios.post(`https://dummyjson.com/auth/login`, {
+      username,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Login failed:", error.response?.data || error.message);
+    throw error; 
+  }
 };

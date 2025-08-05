@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,6 @@ const CATEGORIES = ["electronics", "jewelery", "men's clothing", "women's clothi
 const AddProduct = () => {
   const navigate = useNavigate();
 
-  // Product state
   const [product, setProduct] = useState({
     title: "",
     price: "",
@@ -20,22 +19,42 @@ const AddProduct = () => {
     stock: "",
   });
 
-  // Handle input changes
+  useEffect(() => {
+    const price = parseFloat(product.price);
+    const discount = parseFloat(product.discount);
+    if (!isNaN(price) && !isNaN(discount)) {
+      if (discount > 100) {
+        toast.warn("Discount cannot exceed 100%");
+        setProduct((prev) => ({ ...prev, discount: 100 }));
+      } else {
+        const discountedPrice = price - (price * discount) / 100;
+        setProduct((prev) => ({
+          ...prev,
+          afterdiscountprice: discountedPrice.toFixed(2),
+        }));
+      }
+    }
+  }, [product.price, product.discount]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "discount" && parseFloat(value) > 100 || parseFloat(value) < 0 ) {
+      toast.warn("Discount cannot exceed 100% and not 0 or less");
+      return;
+    }
+
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
 
     try {
       const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
 
-      // ✅ Get the max existing ID and increment by 1
       const existingIds = existingProducts.map((p) => p.id || 0);
-      const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 219;
+      const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 21;
 
       const newProduct = {
         ...product,
@@ -50,14 +69,13 @@ const AddProduct = () => {
         },
       };
 
-      // Save updated list to localStorage
       localStorage.setItem("products", JSON.stringify([...existingProducts, newProduct]));
 
-      toast.success(" Product added successfully!");
+      toast.success("Product added successfully!");
       setTimeout(() => navigate("/product"), 1500);
     } catch (err) {
       console.error("Add product failed:", err);
-      toast.error(" Failed to add product");
+      toast.error("Failed to add product");
     }
   };
 
@@ -102,9 +120,8 @@ const AddProduct = () => {
             name="afterdiscountprice"
             placeholder="Discounted Price in ₹"
             value={product.afterdiscountprice}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded"
+            readOnly
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
           />
 
           <textarea
@@ -125,8 +142,6 @@ const AddProduct = () => {
             required
             className="w-full p-2 border rounded"
           />
-
-          
 
           <select
             name="category"

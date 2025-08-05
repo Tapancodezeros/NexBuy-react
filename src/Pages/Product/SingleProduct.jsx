@@ -8,16 +8,16 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const loadProduct = async () => {
-      // Fetch from localStorage if present
       const local = JSON.parse(localStorage.getItem("products")) || [];
       const localProduct = local.find((p) => String(p.id) === id);
 
       if (localProduct) {
         setProduct(localProduct);
       } else {
-        // Else fetch from API
+        
         try {
           const apiProduct = await fetchProductById(id);
+          console.log("🚀 ~ loadProduct ~ apiProduct:", apiProduct)
           setProduct(apiProduct);
         } catch (err) {
           console.error("Product not found");
@@ -28,9 +28,7 @@ const SingleProduct = () => {
     loadProduct();
 
   }, [id]);
-    
   
-    // Navigate to the edit product page
     const handleEdit = (id) => {
       navigate(`/edit-product/${id}`);
     };
@@ -67,7 +65,6 @@ const SingleProduct = () => {
             />
           </div>
 
-          {/* Product Details */}
           <div className="flex flex-col gap-6">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
@@ -85,12 +82,23 @@ const SingleProduct = () => {
 
           
             <div className="flex items-center justify-between mt-4">
-              <span className="text-3xl font-extrabold text-green-600">
-                ₹
-                {product.afterdiscountprice
-                  ? product.afterdiscountprice
-                  : (product.price * 83).toFixed(2)}
-              </span>
+              <div className="flex flex-col">
+                              {product.afterdiscountprice ? (
+                <>
+                  <span className="text-sm text-gray-500 line-through">
+                   ₹{(product.price).toFixed(0)}
+                  </span>
+                 <span className="text-green-600 font-bold text-lg">
+                   ₹{(product.afterdiscountprice).toFixed(0)}
+                 </span>
+                </>
+                 ) : (
+               <span className="text-green-600 font-bold text-lg">
+                 ₹{(product.price * 83).toFixed(0)}
+                </span>
+                )}
+              </div>
+
 
               {product.rating && product.rating.rate ? (
                 <div className="text-sm font-medium bg-yellow-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm">
