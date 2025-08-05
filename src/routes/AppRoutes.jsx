@@ -13,6 +13,7 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import Performance from "../Pages/Performance";
 import ManageShop from "../Pages/ManageShop";
+import ProtectedRoute from '../utils/ProtectedRoute';
 const AppRoutes=() =>{
   return(
     
@@ -25,14 +26,15 @@ const AppRoutes=() =>{
         <Route path="/login" element={<Login />} /> 
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/product/:id" element={<SingleProduct />} />
-        <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/edit-product/:id" element={<EditProduct/>}/>
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/performance" element={<Performance/>}/>
-        <Route path="/manageshop" element={<ManageShop/>} />
-        
+        <Route element={<ProtectedRoute />}>
+            <Route path="/product" element={<Product />} />
+            <Route path="/product/:id" element={<SingleProduct />} />
+            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/edit-product/:id" element={<EditProduct/>}/>
+            <Route path="/profile" element={<Profile/>}/>
+            <Route path="/performance" element={<Performance/>}/>
+            <Route path="/manageshop" element={<ManageShop/>} />
+        </Route>
     </Routes>
     <Footer/>
     </BrowserRouter>

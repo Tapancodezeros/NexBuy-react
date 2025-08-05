@@ -9,12 +9,10 @@ const Product = () => {
   const [selectedCat, setSelectedCat] = useState("all");
   const navigate = useNavigate();
 
-  // Get local products from localStorage
   const getLocalProducts = () => {
     return JSON.parse(localStorage.getItem("products")) || [];
   };
 
-  // Delete local product
   const handleDelete = (id) => {
     const updatedProducts = getLocalProducts().filter((p) => p.id !== id);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
@@ -22,12 +20,11 @@ const Product = () => {
     loadProducts();
   };
 
-  // Navigate to edit page
+
   const handleEdit = (id) => {
     navigate(`/edit-product/${id}`);
   };
 
-  // Load categories and all products
   const loadProducts = async () => {
     const cats = await fetchCategories();
     setCategories(cats);
@@ -52,7 +49,6 @@ const Product = () => {
     loadProducts();
   }, []);
 
-  // Handle category selection
   const handleChange = async (e) => {
     const selected = e.target.value;
     setSelectedCat(selected);
@@ -76,7 +72,6 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10 my-14">
       <div className="max-w-7xl mx-auto">
-        {/* Top controls */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <NavLink to="/">
             <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl transition">
@@ -107,7 +102,6 @@ const Product = () => {
           </div>
         </div>
 
-        {/* Product Grid */}
         {categoryProducts.map(({ category, products }) => (
           <div key={category} className="mb-12">
             <h3 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
@@ -183,7 +177,6 @@ const Product = () => {
                       </div>
                     </NavLink>
 
-                    {/* Edit & Delete for Local Products */}
                     {isLocal && (
                       <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
                         <button

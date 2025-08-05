@@ -37,7 +37,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-2">
-        {/* Left: Form Section */}
+
         <div className="p-8 md:p-10">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Register for <span className="text-blue-600">NexBuy</span>
@@ -157,7 +157,6 @@ const Register = () => {
           </form>
         </div>
 
-        {/* Right: Image Section */}
         <div className="hidden md:block">
           <img
             src={userimg}
