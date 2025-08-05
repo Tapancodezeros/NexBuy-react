@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+// Static categories
 const CATEGORIES = ["electronics", "jewelery", "men's clothing", "women's clothing"];
 
 const EditProduct = () => {
@@ -11,44 +12,42 @@ const EditProduct = () => {
 
   useEffect(() => {
     const localProducts = JSON.parse(localStorage.getItem("products")) || [];
-    const target = localProducts.find((p) => p.id === parseInt(id));
-    if (!target) {
+    const targetProduct = localProducts.find((p) => p.id === parseInt(id));
+
+    if (!targetProduct) {
       toast.error("Product not found");
       return navigate("/product");
     }
-    setProduct(target);
+    setProduct(targetProduct);
   }, [id, navigate]);
 
   // Auto-calculate afterdiscountprice
   useEffect(() => {
-  if (!product) return;
+    if (!product) return;
 
-  const price = parseFloat(product.price);
-  const discount = parseFloat(product.discount);
+    const price = parseFloat(product.price);
+    const discount = parseFloat(product.discount);
 
-  if (!isNaN(price) && !isNaN(discount)) {
-    if (discount > 100|| discount < 0 ) {
-      toast.warn("Discount cannot exceed 100% and not 0 or less");
-      setProduct((prev) => ({ ...prev, discount: 99 }));
-    } else {
-      const afterDiscount = price - (price * discount) / 100;
-      setProduct((prev) => ({
-        ...prev,
-        afterdiscountprice: afterDiscount.toFixed(2),
-      }));
+    if (!isNaN(price) && !isNaN(discount)) {
+      if (discount > 100 || discount < 0) {
+        toast.warn("Discount must be between 0% and 100%");
+        setProduct((prev) => ({ ...prev, discount: 99 }));
+      } else {
+        const afterDiscount = price - (price * discount) / 100;
+        setProduct((prev) => ({
+          ...prev,
+          afterdiscountprice: afterDiscount.toFixed(2),
+        }));
+      }
     }
-  }
-}, [product?.price, product?.discount]);
+  }, [product?.price, product?.discount]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "discount" && parseFloat(value) > 100 && parseFloat(value) < 0 ) {
-      toast.warn("Discount cannot exceed 100% & less then or = 0");
-      return;
-    }
-
-    setProduct((prev) => ({ ...prev, [name]: value }));
+    setProduct((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -72,68 +71,74 @@ const EditProduct = () => {
   if (!product) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="bg-blue-100 min-h-screen py-10 my-18">
-      <div className="max-w-lg mx-auto p-6 bg-amber-50 shadow rounded hover:z-20">
-        <h2 className="text-2xl font-bold mb-6">Edit Product</h2>
+    <div className="min-h-screen bg-blue-100 py-16">
+      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">
+        <h2 className="text-3xl font-semibold text-center text-blue-700 mb-6">Edit Product</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="text"
             name="title"
             value={product.title}
             onChange={handleChange}
             placeholder="Title"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
+
           <input
             type="number"
             name="price"
             value={product.price}
             onChange={handleChange}
             placeholder="Price"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
+
           <input
             type="number"
             name="discount"
             value={product.discount}
             onChange={handleChange}
             placeholder="Discount (%)"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
+
           <input
             type="number"
             name="afterdiscountprice"
             value={product.afterdiscountprice}
             readOnly
             placeholder="Discounted Price"
-            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+            className="w-full p-3 border rounded-md bg-gray-100 cursor-not-allowed text-gray-500"
           />
+
           <textarea
             name="description"
             value={product.description}
             onChange={handleChange}
             placeholder="Description"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
+
           <input
             type="text"
             name="image"
             value={product.image}
             onChange={handleChange}
             placeholder="Image URL"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
+
           <select
             name="category"
             value={product.category}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           >
             <option value="">Select Category</option>
@@ -143,28 +148,32 @@ const EditProduct = () => {
               </option>
             ))}
           </select>
+
           <input
             type="number"
             name="stock"
             value={product.stock}
             onChange={handleChange}
             placeholder="Stock"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
 
-          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-            Update Product
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-all"
+          >
+            ✅ Update Product
           </button>
-
-          <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 mb-8">
-            <NavLink to="/product">
-              <button className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition">
-                ⬅️ Go Back
-              </button>
-            </NavLink>
-          </div>
         </form>
+
+        <div className="flex justify-center mt-6">
+          <NavLink to="/product">
+            <button className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition">
+              ⬅️ Go Back
+            </button>
+          </NavLink>
+        </div>
       </div>
     </div>
   );

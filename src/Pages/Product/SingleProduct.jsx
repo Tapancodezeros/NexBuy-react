@@ -8,16 +8,16 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const loadProduct = async () => {
-      // Fetch from localStorage if present
       const local = JSON.parse(localStorage.getItem("products")) || [];
       const localProduct = local.find((p) => String(p.id) === id);
 
       if (localProduct) {
         setProduct(localProduct);
       } else {
-        // Else fetch from API
+        
         try {
           const apiProduct = await fetchProductById(id);
+          console.log("🚀 ~ loadProduct ~ apiProduct:", apiProduct)
           setProduct(apiProduct);
         } catch (err) {
           console.error("Product not found");
@@ -28,9 +28,7 @@ const SingleProduct = () => {
     loadProduct();
 
   }, [id]);
-    
   
-    // Navigate to the edit product page
     const handleEdit = (id) => {
       navigate(`/edit-product/${id}`);
     };
@@ -67,7 +65,6 @@ const SingleProduct = () => {
             />
           </div>
 
-          {/* Product Details */}
           <div className="flex flex-col gap-6">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-800">

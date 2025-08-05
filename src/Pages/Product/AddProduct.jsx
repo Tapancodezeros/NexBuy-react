@@ -19,7 +19,6 @@ const AddProduct = () => {
     stock: "",
   });
 
-  // Auto-calculate afterdiscountprice
   useEffect(() => {
     const price = parseFloat(product.price);
     const discount = parseFloat(product.discount);

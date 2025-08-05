@@ -20,7 +20,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Step 1: Check local user
+    
     const dummyUser = JSON.parse(localStorage.getItem("dummyUser"));
 
     if (
@@ -28,13 +28,13 @@ const Login = () => {
       dummyUser.email === username &&
       dummyUser.password === password
     ) {
-      localStorage.setItem("token", "local"); // fake token
+      localStorage.setItem("token", "local"); 
       localStorage.setItem("userId", dummyUser.email);
       toast.success("Logged in with local account!", { autoClose: 1500 });
       setTimeout(() => navigate("/"), 1000);
       return;
     }
-    // Step 2: Try API login
+    
     try {
       const res = await loginUser(username, password);
       localStorage.setItem("token", res.accessToken);
