@@ -17,7 +17,7 @@ const Contact = () => {
 
   
   return (
-    <section className="min-h-screen bg-gray-100 py-10">
+    <section className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4">
       <div className="max-w-xl mx-auto bg-white p-8 shadow-xl rounded-lg my-20">
         <form onSubmit={handleFormSubmit} className="space-y-6">
           <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Contact Us</h2>

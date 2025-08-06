@@ -3,6 +3,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
 import logo from "../assets/images/NexGen.png";
+import { toast } from "react-toastify";
 
 export const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -16,6 +17,7 @@ export const Header = () => {
   const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
 
   const handleLogout = () => {
+    toast.success("user logout successfully", { autoClose: 1000 })
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("contactData");

@@ -83,7 +83,7 @@ const ManageShop = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10 my-15">
           🏬 Manage Your Shops

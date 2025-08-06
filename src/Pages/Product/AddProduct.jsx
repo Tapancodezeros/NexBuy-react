@@ -80,11 +80,11 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="bg-pink-100 min-h-screen py-10">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-white px-4 py-20 text-center">
       <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Add New Product</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="max-w-m mx-auto space-y-3">
           <input
             type="text"
             name="title"

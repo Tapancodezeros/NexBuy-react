@@ -46,7 +46,7 @@ const SingleProduct = () => {
   const isLocal = product.id > 20;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white flex items-center justify-center py-10 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 md:p-12 transition-all duration-300 transform hover:scale-[1.01]">
       
         <NavLink

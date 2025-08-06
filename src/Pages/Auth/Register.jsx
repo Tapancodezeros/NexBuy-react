@@ -7,7 +7,9 @@ import { toast } from "react-toastify";
 
 const initialValues = {
   name: "",
+  username:"",
   email: "",
+  phone: "",
   password: "",
   confirm_password: "",
 };
@@ -15,12 +17,12 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate();
 
-  const {values,errors,touched,handleBlur,handleChange,handleSubmit,} = useFormik({initialValues,validationSchema: signUpSchema,
+  const {values,errors,touched,handleBlur,handleChange,handleSubmit} = useFormik({initialValues,validationSchema: signUpSchema,
       onSubmit: (values, action) => {
-      const { name, email, password } = values;
-      const newUser = { username: name, email, password };
+      const { name,username, email,phone, password } = values;
+      const newUser = { username, name, email,phone, password };
       localStorage.setItem("dummyUser", JSON.stringify(newUser));
-      alert("🎉 Registered locally. Please login.");
+      toast.success("Registered locally. Please login.", { autoClose: 1000 });
       action.resetForm();
       navigate("/login");
     },
@@ -68,7 +70,31 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.name}</p>
               )}
             </div>
-          
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                UserName
+              </label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                autoComplete="off"
+                value={values.username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border ${
+                  errors.username && touched.username
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                placeholder="Your userName"
+              />
+              {errors.username && touched.username && (
+                <p className="text-sm text-red-600 mt-1">{errors.username}</p>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -84,7 +110,7 @@ const Register = () => {
                 className={`w-full px-4 py-2 border ${
                   errors.email && touched.email
                     ? "border-red-500"
-                    : "border-gray-300"
+                    : "border-gray-400"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="example@mail.com"
               />
@@ -92,7 +118,30 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
-          
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone
+              </label>
+              <input
+                type="number"
+                name="phone"
+                id="phone"
+                value={values.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border ${
+                  errors.phone && touched.phone
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                placeholder="1234567890"
+              />
+              {errors.phone && touched.phone && (
+                <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -140,7 +189,6 @@ const Register = () => {
                 </p>
               )}
             </div>
-          
             <button
               type="submit"
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-200"
@@ -161,7 +209,7 @@ const Register = () => {
           <img
             src={userimg}
             alt="Registration illustration"
-            className="h-full w-full object-cover rounded-r-2xl"
+            className="h-full w-full object-fill rounded-r-2xl"
           />
         </div>
       </div>
