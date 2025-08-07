@@ -48,6 +48,7 @@ const SingleProduct = () => {
     isLocal && product.stock <= 0;
   const fewstock =
     isLocal && product.stock <=5 && product.stock>=1; 
+  const discount = product.discount? product.discount : null;
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4 my-18">
       
@@ -100,10 +101,13 @@ const SingleProduct = () => {
                   {product.afterdiscountprice ? (
                 <>
                   <span className="text-sm text-gray-500 line-through">
-                   ₹{(product.price).toFixed(0)}
+                  Original Price ₹{(product.price).toFixed(0)}
+                  </span>
+                  <span className="text-blue-400 font-extrabold text-lg">
+                    Discount {discount}%
                   </span>
                  <span className="text-green-600 font-bold text-lg">
-                   ₹{(product.afterdiscountprice).toFixed(0)}
+                  Final Price ₹{(product.afterdiscountprice).toFixed(0)}
                  </span>
                 </>
                  ) : (

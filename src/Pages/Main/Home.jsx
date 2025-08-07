@@ -12,7 +12,7 @@ function Home() {
   return (
     <div className="my-18">
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-white px-4 py-20 text-center">
-      <h1 className="text-5xl md:text-6xl font-extrabold text-blue-800 mb-6 drop-shadow-amber-700">
+      <h1 className="text-5xl md:text-6xl font-extrabold text-blue-800 mb-6 drop-shadow-amber-600">
         🛍️ NexBuy
       </h1>
 
