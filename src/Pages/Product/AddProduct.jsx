@@ -23,9 +23,9 @@ const AddProduct = () => {
     const price = parseFloat(product.price);
     const discount = parseFloat(product.discount);
     if (!isNaN(price) && !isNaN(discount)) {
-      if (discount > 100) {
-        toast.warn("Discount cannot exceed 100%");
-        setProduct((prev) => ({ ...prev, discount: 100 }));
+      if (discount > 99 || discount < 1) {
+        toast.warn("Discount must be between & Equal to 0% and 100%");
+        setProduct((prev) => ({ ...prev, discount: 5 }));
       } else {
         const discountedPrice = price - (price * discount) / 100;
         setProduct((prev) => ({
@@ -65,7 +65,7 @@ const AddProduct = () => {
         stock: parseInt(product.stock),
         rating: {
           rate: (Math.random() * 5).toFixed(1),
-          count: Math.floor(Math.random() * 100) + 1,
+          count: Math.floor(Math.random() * 500) + 1,
         },
       };
 

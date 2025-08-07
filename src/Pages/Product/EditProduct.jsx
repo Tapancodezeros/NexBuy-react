@@ -27,9 +27,9 @@ const EditProduct = () => {
     const discount = parseFloat(product.discount);
 
     if (!isNaN(price) && !isNaN(discount)) {
-      if (discount > 100 || discount < 0) {
-        toast.warn("Discount must be between 0% and 100%");
-        setProduct((prev) => ({ ...prev, discount: 99 }));
+      if (discount > 99 || discount < 1) {
+        toast.warn("Discount must be between & Equal to 0% and 100%");
+        setProduct((prev) => ({ ...prev, discount: 5 }));
       } else {
         const afterDiscount = price - (price * discount) / 100;
         setProduct((prev) => ({

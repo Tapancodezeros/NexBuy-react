@@ -17,7 +17,7 @@ const SingleProduct = () => {
         
         try {
           const apiProduct = await fetchProductById(id);
-          console.log("🚀 ~ loadProduct ~ apiProduct:", apiProduct)
+          
           setProduct(apiProduct);
         } catch (err) {
           console.error("Product not found");
@@ -44,11 +44,15 @@ const SingleProduct = () => {
   }
 
   const isLocal = product.id > 20;
-
+  const outofstock =
+    isLocal && product.stock <= 0;
+  const fewstock =
+    isLocal && product.stock <=5 && product.stock>=1; 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 md:p-12 transition-all duration-300 transform hover:scale-[1.01]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4 my-18">
       
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 md:p-12 transition-all duration-300 transform hover:scale-[1.01]">
+       <h1 className="flex items-center justify-center text-4xl font-extrabold">View Product</h1>
         <NavLink
           to="/product"
           className="inline-flex items-center mb-6 text-sm font-semibold text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition"
@@ -63,6 +67,16 @@ const SingleProduct = () => {
               alt={product.title}
               className="w-full h-80 md:h-96 object-contain"
             />
+            {outofstock && (
+              <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                Out of Stock
+              </span>
+            )}
+            {fewstock && (
+              <span className="absolute bottom-2 left-2 bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded">
+                last {product.stock} pic left
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-6">
@@ -83,7 +97,7 @@ const SingleProduct = () => {
           
             <div className="flex items-center justify-between mt-4">
               <div className="flex flex-col">
-                              {product.afterdiscountprice ? (
+                  {product.afterdiscountprice ? (
                 <>
                   <span className="text-sm text-gray-500 line-through">
                    ₹{(product.price).toFixed(0)}
@@ -101,9 +115,17 @@ const SingleProduct = () => {
 
 
               {product.rating && product.rating.rate ? (
+                <>
+              <div className="flex gap-4">
                 <div className="text-sm font-medium bg-yellow-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm">
-                  ⭐ {product.rating.rate} / {product.rating.count}
+                  ⭐ {product.rating.rate}
+                  
                 </div>
+                <div className="text-sm font-medium bg-blue-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm ">
+                  review:{product.rating.count}
+                </div>
+                </div>
+                  </>
               ) : (
                 <div className="text-sm italic text-gray-400">
                   No Rating
@@ -115,9 +137,9 @@ const SingleProduct = () => {
                       <div className=" items-center justify-center flex my-15">
                         <button
                           onClick={() => handleEdit(product.id)}
-                          className="bg-yellow-500 px-5 py-3 text-white rounded text-sm"
+                          className="bg-black px-5 py-3 text-white rounded text-sm"
                         >
-                          ✏️Edit
+                          ✏️ Edit
                         </button>
                       </div>
                     )}
