@@ -7,7 +7,9 @@ import { toast } from "react-toastify";
 
 const initialValues = {
   name: "",
+  username: "",
   email: "",
+  phone: "",
   password: "",
   confirm_password: "",
 };
@@ -15,14 +17,13 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate();
 
-  const {values,errors,touched,handleBlur,handleChange,handleSubmit,} = useFormik({initialValues,validationSchema: signUpSchema,
-      onSubmit: (values, action) => {
-      const { name, email, password } = values;
-      const newUser = { username: name, email, password };
+  const { values,errors,touched,handleBlur,handleChange,handleSubmit} = useFormik({initialValues,validationSchema: signUpSchema,onSubmit: (values, action) => {
+      const { name, username, email, phone, password } = values;
+      const newUser = { name, username, email, phone, password };
       localStorage.setItem("dummyUser", JSON.stringify(newUser));
-      alert("🎉 Registered locally. Please login.");
+      toast.success("Registered locally. Please login.", { autoClose: 1000 });
       action.resetForm();
-      navigate("/login");
+      setTimeout(() => navigate("/login"), 1200);
     },
   });
 
@@ -35,20 +36,17 @@ const Register = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 m">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-2">
-
         <div className="p-8 md:p-10">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Register for <span className="text-blue-600">NexBuy</span>
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-          
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
                 type="text"
                 name="name"
@@ -58,9 +56,7 @@ const Register = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-2 border ${
-                  errors.name && touched.name
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors.name && touched.name ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="Your Name"
               />
@@ -68,11 +64,29 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.name}</p>
               )}
             </div>
-          
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">UserName</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                autoComplete="off"
+                value={values.username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border ${
+                  errors.username && touched.username ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                placeholder="Your Username"
+              />
+              {errors.username && touched.username && (
+                <p className="text-sm text-red-600 mt-1">{errors.username}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
                 type="email"
                 name="email"
@@ -82,9 +96,7 @@ const Register = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-2 border ${
-                  errors.email && touched.email
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors.email && touched.email ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="example@mail.com"
               />
@@ -92,22 +104,39 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
-          
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                value={values.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onWheel={(e) => e.target.blur()}
+                className={`w-full px-4 py-2 border ${
+                  errors.phone && touched.phone ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                placeholder="1234567890"
+              />
+              {errors.phone && touched.phone && (
+                <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
+              )}
+            </div>
+
+           <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <input
                 type="password"
                 name="password"
                 id="password"
+                autoComplete="new-password"
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-2 border ${
-                  errors.password && touched.password
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors.password && touched.password ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="********"
               />
@@ -115,39 +144,32 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.password}</p>
               )}
             </div>
-          
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Confirm Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
               <input
                 type="password"
                 name="confirm_password"
                 id="confirm_password"
+                autoComplete="new-password"
                 value={values.confirm_password}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-2 border ${
-                  errors.confirm_password && touched.confirm_password
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors.confirm_password && touched.confirm_password ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 placeholder="********"
               />
               {errors.confirm_password && touched.confirm_password && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.confirm_password}
-                </p>
+                <p className="text-sm text-red-600 mt-1">{errors.confirm_password}</p>
               )}
             </div>
-          
             <button
               type="submit"
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-200"
             >
               Register
             </button>
-    
             <p className="text-sm text-center text-gray-600 mt-3">
               Already have an account?{" "}
               <Link to="/login" className="text-blue-600 hover:underline font-medium">
@@ -161,7 +183,7 @@ const Register = () => {
           <img
             src={userimg}
             alt="Registration illustration"
-            className="h-full w-full object-cover rounded-r-2xl"
+            className="h-full w-full object-fill rounded-r-2xl"
           />
         </div>
       </div>

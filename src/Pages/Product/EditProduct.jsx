@@ -27,9 +27,9 @@ const EditProduct = () => {
     const discount = parseFloat(product.discount);
 
     if (!isNaN(price) && !isNaN(discount)) {
-      if (discount > 100 || discount < 0) {
-        toast.warn("Discount must be between 0% and 100%");
-        setProduct((prev) => ({ ...prev, discount: 99 }));
+      if (discount > 99 || discount < 1) {
+        toast.warn("Discount must be between & Equal to 0% and 100%");
+        setProduct((prev) => ({ ...prev, discount: 5 }));
       } else {
         const afterDiscount = price - (price * discount) / 100;
         setProduct((prev) => ({
@@ -69,11 +69,11 @@ const EditProduct = () => {
   if (!product) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-blue-100 py-16">
+    <div className=" min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-white px-4 py-20 text-center">
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">
-        <h2 className="text-3xl font-semibold text-center text-blue-700 mb-6">Edit Product</h2>
+        <h2 className="text-3xl font-semibold text-center mb-6">Edit Product</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="max-w-m mx-auto space-y-3">
           <input
             type="text"
             name="title"

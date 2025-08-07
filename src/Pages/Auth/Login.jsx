@@ -12,7 +12,7 @@ const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      toast.error("User already logged in");
+      toast.error("User already logged in" , { autoClose: 1000 });
       navigate("/");
     }
   }, [navigate]);
@@ -25,12 +25,12 @@ const Login = () => {
 
     if (
       dummyUser &&
-      dummyUser.email === username &&
+      dummyUser.username === username &&
       dummyUser.password === password
     ) {
       localStorage.setItem("token", "local"); 
       localStorage.setItem("userId", dummyUser.email);
-      toast.success("Logged in with local account!", { autoClose: 1500 });
+      toast.success("Logged in with local account!", { autoClose: 1000 });
       setTimeout(() => navigate("/"), 1000);
       return;
     }
@@ -39,8 +39,8 @@ const Login = () => {
       const res = await loginUser(username, password);
       localStorage.setItem("token", res.accessToken);
       localStorage.setItem("userId", res.id);
-      toast.success("Login via API successful!", { autoClose: 1500 });
-      setTimeout(() => navigate("/"), 1000);
+      toast.success("Login via API successful!", { autoClose: 1000 });
+      setTimeout(() => navigate("/"), 800);
     } catch (err) {
       toast.error("Login failed. Check credentials.");
     }

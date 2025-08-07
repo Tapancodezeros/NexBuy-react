@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
-
+ 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (token === "local") {
-        // Get user from localStorage
         const localUser = JSON.parse(localStorage.getItem("dummyUser"));
         if (localUser) {
           setUser({
-            firstName: localUser.username,
+            firstName: localUser.name,
             lastName: "",
             email: localUser.email,
-            phone: "N/A",
+            phone: localUser.phone,
             username: localUser.username,
-            image: "https://cdn-icons-png.flaticon.com/512/149/149071.png", // default avatar
+            image: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
           });
         }
         setLoading(false);
@@ -56,9 +56,16 @@ const Profile = () => {
       </div>
     );
   }
+const handleLogout = () => {
+    toast.success("user logout successfully", { autoClose: 1000 })
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("contactData");
 
+    navigate("/");
+  };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white flex items-center justify-center py-10 px-4">
       <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 transition-all duration-500">
         <h2 className="text-3xl font-bold text-center text-blue-700 mb-6 flex items-center justify-center gap-2">
           <FaUserCircle className="text-4xl text-blue-600" />
@@ -87,10 +94,20 @@ const Profile = () => {
 
         <div className="flex items-center justify-center mt-8">
           <NavLink to="/">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300 shadow-md">
+            <button className="bg-red-500 text-white px-6 py-1 rounded-full hover:bg-red-600 transition duration-300 shadow-md">
               ⬅️ Go Back
             </button>
           </NavLink>
+        </div>
+        <div className="flex items-center justify-center mt-2">
+        <button
+         className="bg-red-500 text-white px-6 py-1 rounded-b-lg hover:bg-red-600 transition duration-300 shadow-md"
+         onClick={() => {
+         handleLogout();
+         }}
+         >
+          Logout
+        </button>
         </div>
       </div>
     </div>
@@ -98,4 +115,3 @@ const Profile = () => {
 };
 
 export default Profile;
- 

@@ -23,9 +23,9 @@ const AddProduct = () => {
     const price = parseFloat(product.price);
     const discount = parseFloat(product.discount);
     if (!isNaN(price) && !isNaN(discount)) {
-      if (discount > 100) {
-        toast.warn("Discount cannot exceed 100%");
-        setProduct((prev) => ({ ...prev, discount: 100 }));
+      if (discount > 99 || discount < 1) {
+        toast.warn("Discount must be between & Equal to 0% and 100%");
+        setProduct((prev) => ({ ...prev, discount: 5 }));
       } else {
         const discountedPrice = price - (price * discount) / 100;
         setProduct((prev) => ({
@@ -65,7 +65,7 @@ const AddProduct = () => {
         stock: parseInt(product.stock),
         rating: {
           rate: (Math.random() * 5).toFixed(1),
-          count: Math.floor(Math.random() * 100) + 1,
+          count: Math.floor(Math.random() * 500) + 1,
         },
       };
 
@@ -80,11 +80,11 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="bg-pink-100 min-h-screen py-10">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-white px-4 py-20 text-center">
       <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Add New Product</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="max-w-m mx-auto space-y-3">
           <input
             type="text"
             name="title"
