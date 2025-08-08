@@ -17,33 +17,11 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate();
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues,
-    validationSchema: signUpSchema,
-    onSubmit: (values, action) => {
+  const { values,errors,touched,handleBlur,handleChange,handleSubmit} = useFormik({initialValues,validationSchema: signUpSchema,onSubmit: (values, action) => {
       const { name, username, email, phone, password } = values;
       const newUser = { name, username, email, phone, password };
-
-      // Get existing users
-      const existingUsers = JSON.parse(localStorage.getItem("dummyUsers")) || [];
-
-      // Check for duplicate username or email
-      const isExistingUser = existingUsers.some(
-        (user) => user.username === username || user.email === email
-      );
-
-      if (isExistingUser) {
-        toast.error("Username or Email already exists", { autoClose: 1500 });
-        return;
-      }
-
-      // Add new user to the list
-      existingUsers.push(newUser);
-
-      // Save back to localStorage
-      localStorage.setItem("dummyUsers", JSON.stringify(existingUsers));
-
-      toast.success("Registered successfully!", { autoClose: 1000 });
+      localStorage.setItem("dummyUser", JSON.stringify(newUser));
+      toast.success("Registered locally. Please login.", { autoClose: 1000 });
       action.resetForm();
       setTimeout(() => navigate("/login"), 1200);
     },
@@ -58,7 +36,7 @@ const Register = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 m">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-2">
         <div className="p-8 md:p-10">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
@@ -66,6 +44,7 @@ const Register = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
@@ -87,7 +66,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">UserName</label>
               <input
                 type="text"
                 name="username"
@@ -146,7 +125,7 @@ const Register = () => {
               )}
             </div>
 
-            <div>
+           <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <input
                 type="password"
@@ -185,16 +164,12 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.confirm_password}</p>
               )}
             </div>
-
             <button
               type="submit"
-              className="flex items-center justify-center text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 
-            hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg 
-            shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm p-4 py-2.5 text-center me-2 mb-2"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-200"
             >
               Register
             </button>
-
             <p className="text-sm text-center text-gray-600 mt-3">
               Already have an account?{" "}
               <Link to="/login" className="text-blue-600 hover:underline font-medium">

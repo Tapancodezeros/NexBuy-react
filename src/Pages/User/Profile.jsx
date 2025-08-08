@@ -3,12 +3,14 @@ import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
+ 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (token === "local") {
@@ -30,22 +32,36 @@ const Profile = () => {
           setUser(response.data);
         } catch (error) {
           console.error("Failed to fetch user profile:", error);
-        } finally {setLoading(false);}
+        } finally {
+          setLoading(false);
+        }
       }
     };
+
     if (userId && token) fetchUserProfile();
   }, [userId, token]);
+
   if (loading) {
-    return (<div className="text-center mt-10 text-gray-500 text-lg animate-pulse">Loading profile...</div>);
+    return (
+      <div className="text-center mt-10 text-gray-500 text-lg animate-pulse">
+        Loading profile...
+      </div>
+    );
   }
+
   if (!user) {
-    return (<div className="text-center mt-10 text-red-500 text-lg">User not found</div>);
+    return (
+      <div className="text-center mt-10 text-red-500 text-lg">
+        User not found
+      </div>
+    );
   }
- const handleLogout = () => {
+const handleLogout = () => {
     toast.success("user logout successfully", { autoClose: 1000 })
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("contactData");
+
     navigate("/");
   };
   return (
@@ -55,23 +71,36 @@ const Profile = () => {
           <FaUserCircle className="text-4xl text-blue-600" />
           User Profile
         </h2>
-        <div className="flex flex-col items-center space-y-3 text-center">
-          <img src={user.image}alt="Profile"
-          className="w-28 h-28 rounded-full border-4 border-blue-300 shadow-lg hover:scale-105 transition-transform duration-300"
-          />
-          <h3 className="text-2xl font-extrabold text-gray-600">{user.firstName} {user.lastName}</h3>
-          <p className="text-gray-600 text-sm">📧 <span className="font-medium">Email:</span> {user.email}</p>
-          <p className="text-gray-600 text-sm">📱 <span className="font-medium">Phone:</span> {user.phone}</p>
-          <p className="text-gray-600 text-sm">👤 <span className="font-medium">Username:</span> {user.username}</p>
-        </div>
 
+        <div className="flex flex-col items-center space-y-3 text-center">
+          <img
+            src={user.image}
+            alt="Profile"
+            className="w-28 h-28 rounded-full border-4 border-blue-300 shadow-lg hover:scale-105 transition-transform duration-300"
+          />
+          <h3 className="text-xl font-semibold text-gray-800">
+            {user.firstName} {user.lastName}
+          </h3>
+          <p className="text-gray-600 text-sm">
+            📧 <span className="font-medium">Email:</span> {user.email}
+          </p>
+          <p className="text-gray-600 text-sm">
+            📱 <span className="font-medium">Phone:</span> {user.phone}
+          </p>
+          <p className="text-gray-600 text-sm">
+            👤 <span className="font-medium">Username:</span> {user.username}
+          </p>
+        </div>
         <div className="flex items-center justify-center mt-8">
           <NavLink to="/">
-            <button className="bg-red-500 text-white px-6 py-1 rounded-full hover:bg-red-600 transition duration-300 shadow-md">⬅️ Go Back</button>
+            <button className="bg-red-500 text-white px-6 py-1 rounded-full hover:bg-red-600 transition duration-300 shadow-md">
+              ⬅️ Go Back
+            </button>
           </NavLink>
         </div>
         <div className="flex items-center justify-center mt-2">
-        <button className="bg-red-500 text-white px-6 py-1 rounded-b-lg hover:bg-red-600 transition duration-300 shadow-md"
+        <button
+         className="bg-red-500 text-white px-6 py-1 rounded-b-lg hover:bg-red-600 transition duration-300 shadow-md"
          onClick={() => {
          handleLogout();
          }}

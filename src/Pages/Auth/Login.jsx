@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     
-    const dummyUser = JSON.parse(localStorage.getItem("dummyUsers"),[]);
+    const dummyUser = JSON.parse(localStorage.getItem("dummyUser"));
 
     if (
       dummyUser &&
@@ -82,10 +82,12 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
           </div>
-         <button type="submit" className=" flex items-center justify-center text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 
-            hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg 
-            shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm p-44 py-2.5 text-center me-2 mb-2">
-              Login
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition transform hover:scale-[1.02] duration-200"
+          >
+            Login
           </button>
         </form>
 
