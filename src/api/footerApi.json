@@ -2,16 +2,16 @@
   {
     "icon": "MdPlace",
     "title": "Find us",
-    "details":"Ahmadabad, Gujarat"
+    "details":"NexBuy HQ - Mumbai, India"
   },
   {
     "icon": "IoCallSharp",
     "title": "Call us",
-    "details": "+91-9313221604"
+    "details": "+91-9876543210"
   },
   {
     "icon": "TbMailPlus",
     "title": "Mail us",
-    "details": "contact@gmail.com"
+    "details": "support@nexbuy.com "
   }
 ]

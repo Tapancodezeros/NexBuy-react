@@ -42,7 +42,6 @@ const SingleProduct = () => {
       </div>
     );
   }
-
   const isLocal = product.id > 20;
   const outofstock =
     isLocal && product.stock <= 0;
@@ -56,104 +55,57 @@ const SingleProduct = () => {
        <h1 className="flex items-center justify-center text-4xl font-extrabold">View Product</h1>
         <NavLink
           to="/product"
-          className="inline-flex items-center mb-6 text-sm font-semibold text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition"
-        >
+          className="inline-flex items-center mb-6 text-sm font-semibold text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition" >
           ⬅️Back to Product List
         </NavLink>
-
         <div className="grid md:grid-cols-2 gap-10 items-start">
           <div className="bg-gray-100 p-6 rounded-xl shadow-inner flex items-center justify-center">
-            <img
-              src={product.image}
-              alt={product.title}
-              className="w-full h-80 md:h-96 object-contain"
-            />
+            <img src={product.image} alt={product.title} className="w-full h-80 md:h-96 object-contain"/>
             {outofstock && (
-              <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                Out of Stock
-              </span>
+              <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">Out of Stock</span>
             )}
             {fewstock && (
-              <span className="absolute bottom-2 left-2 bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded">
-                last {product.stock} pic left
-              </span>
+              <span className="absolute bottom-2 left-2 bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded">last {product.stock} pic left</span>
             )}
           </div>
-
           <div className="flex flex-col gap-6">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-                {product.title}
-              </h2>
-              <p className="text-sm text-gray-500 uppercase tracking-wide mt-1">
-                {product.category}
-              </p>
-            </div>
-
-           
-            <p className="text-gray-700 text-base leading-relaxed">
-              {product.description || "No description available."}
-            </p>
-
-          
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800">{product.title}</h2>
+              <p className="text-sm text-gray-500 uppercase tracking-wide mt-1">{product.category}</p>
+            </div>           
+            <p className="text-gray-700 text-base leading-relaxed">{product.description || "No description available."}</p>       
             <div className="flex items-center justify-between mt-4">
               <div className="flex flex-col">
                   {product.afterdiscountprice ? (
                 <>
-                  <span className="text-sm text-gray-500 line-through">
-                  Original Price ₹{(product.price).toFixed(0)}
-                  </span>
-                  <span className="text-blue-400 font-extrabold text-lg">
-                    Discount {discount}%
-                  </span>
-                 <span className="text-green-600 font-bold text-lg">
-                  Final Price ₹{(product.afterdiscountprice).toFixed(0)}
-                 </span>
+                  <span className="text-sm text-gray-500 line-through">Original Price ₹{(product.price).toFixed(0)}</span>
+                  <span className="text-blue-400 font-extrabold text-lg">Discount {discount}%</span>
+                 <span className="text-green-600 font-bold text-lg">Final Price ₹{(product.afterdiscountprice).toFixed(0)}</span>
                 </>
                  ) : (
-               <span className="text-green-600 font-bold text-lg">
-                 ₹{(product.price * 83).toFixed(0)}
-                </span>
+               <span className="text-green-600 font-bold text-lg">₹{(product.price * 83).toFixed(0)}</span>
                 )}
               </div>
-
-
               {product.rating && product.rating.rate ? (
                 <>
               <div className="flex gap-4">
-                <div className="text-sm font-medium bg-yellow-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm">
-                  ⭐ {product.rating.rate}
-                  
-                </div>
-                <div className="text-sm font-medium bg-blue-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm ">
-                  review:{product.rating.count}
-                </div>
+                <div className="text-sm font-medium bg-yellow-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm">⭐{product.rating.rate}</div>
+                <div className="text-sm font-medium bg-blue-200 text-yellow-800 px-3 py-1 rounded-md shadow-sm ">review:{product.rating.count}</div>
                 </div>
                   </>
               ) : (
-                <div className="text-sm italic text-gray-400">
-                  No Rating
-                </div>
-              )}
-                         
+                <div className="text-sm italic text-gray-400">No Rating</div>
+              )}                         
             </div>
              {isLocal && (
                       <div className=" items-center justify-center flex my-15">
-                        <button
-                          onClick={() => handleEdit(product.id)}
-                          className="bg-black px-5 py-3 text-white rounded text-sm"
-                        >
-                          ✏️ Edit
-                        </button>
+                        <button onClick={() => handleEdit(product.id)} className="bg-black px-5 py-3 text-white rounded text-sm">✏️ Edit</button>
                       </div>
                     )}
-
           </div>
         </div>
-
       </div>
     </div>
   );
 };
-
 export default SingleProduct;
