@@ -88,6 +88,7 @@ export const Header = () => {
                     About
                   </button>
                 </li>
+                
                 <li>
                   <button
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
@@ -120,7 +121,7 @@ export const Header = () => {
                     Performance
                   </button>
                 </li>
-
+                
 
                 {/* Profile Dropdown */}
                 <li className="relative group">

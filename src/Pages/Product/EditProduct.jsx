@@ -17,8 +17,7 @@ const EditProduct = () => {
       toast.error("Product not found");
       return navigate("/product");
     }
-    setProduct(targetProduct);
-  }, [id, navigate]);
+    setProduct(targetProduct);}, [id, navigate]);
 
   useEffect(() => {
     if (!product) return;
@@ -32,9 +31,7 @@ const EditProduct = () => {
         setProduct((prev) => ({ ...prev, discount: 5 }));
       } else {
         const afterDiscount = price - (price * discount) / 100;
-        setProduct((prev) => ({
-          ...prev,
-          afterdiscountprice: afterDiscount.toFixed(2),
+        setProduct((prev) => ({...prev,afterdiscountprice: afterDiscount.toFixed(2),
         }));
       }
     }
@@ -42,10 +39,7 @@ const EditProduct = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setProduct((prev) => ({...prev,[name]: value,}));
   };
 
   const handleSubmit = (e) => {
@@ -157,24 +151,16 @@ const EditProduct = () => {
             required
           />
 
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-all"
-          >
-             Update Product
-          </button>
+          <button type="submit"className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-all" >Update Product</button>
         </form>
 
         <div className="flex justify-center mt-6">
           <NavLink to="/product">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition">
-              ⬅️ Go Back
-            </button>
+            <button className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition">⬅️ Go Back</button>
           </NavLink>
         </div>
       </div>
     </div>
   );
 };
-
 export default EditProduct;
