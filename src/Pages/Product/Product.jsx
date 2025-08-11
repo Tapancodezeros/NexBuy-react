@@ -68,7 +68,7 @@ const Product = () => {
             <select
               value={selectedCat}
               onChange={handleChange}
-              className="min-w-[180px] p-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+              className="min-w-[180px] p-2 border border-gray-300 rounded-lg shadow-sm bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
               <option value="all">All Categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -76,6 +76,7 @@ const Product = () => {
                 </option>
               ))}
             </select>
+
             <NavLink
               to="/add-product"
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-xl transition duration-200">

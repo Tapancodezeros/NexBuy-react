@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { RiSliceLine } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -32,6 +33,7 @@ const ManageShop = () => {
     if (!shop.description.trim()) {
       tempErrors.description = "Shop description is required.";
       valid = false;
+      
     }
 
     setErrors(tempErrors);
@@ -111,6 +113,7 @@ const ManageShop = () => {
               placeholder="Describe your shop"
               value={shop.description}
               onChange={handleChange}
+            
               className={`w-full px-4 py-3 rounded-xl border ${
                 errors.description ? "border-red-500" : "border-gray-300"
               } focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -165,18 +168,19 @@ const ManageShop = () => {
                   </p>
                 </div>
                 <div className="flex flex-col gap-1 text-right">
-                  <button
-                    onClick={() => handleEdit(idx)}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    ✏️ Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(idx)}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    ❌ Delete
-                  </button>
+                 <button
+                  onClick={() => handleEdit(idx)}
+                  className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors duration-200 ml-2"
+                >
+                  ✏️ Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(idx)}
+                  className="px-3 py-1 text-sm text-black bg-red-500 rounded hover:bg-red-700 transition-colors duration-200 ml-2"
+                >
+                  ❌ Delete
+                </button>
+
                 </div>
               </div>
             ))}

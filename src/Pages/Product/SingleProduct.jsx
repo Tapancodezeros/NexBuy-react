@@ -99,7 +99,7 @@ const SingleProduct = () => {
             </div>
              {isLocal && (
                       <div className=" items-center justify-center flex my-15">
-                        <button onClick={() => handleEdit(product.id)} className="bg-black px-5 py-3 text-white rounded text-sm">✏️ Edit</button>
+                        <button onClick={() => handleEdit(product.id)} className="bg-black px-5 py-3 text-white hover: rounded text-sm">✏️ Edit</button>
                       </div>
                     )}
           </div>
