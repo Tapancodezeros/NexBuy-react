@@ -107,8 +107,8 @@ const Product = () => {
                       {outofstock && (
                         <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">Out of Stock</span>)} 
                       {fewstock && (
-                        <span className="absolute bottom-2 left-2 bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded">
-                          last {product.stock} pic left
+                        <span className="absolute bottom-2 left-2 bg-amber-300 text-black text-xs font-semibold px-2 py-1 rounded">
+                          last {product.stock} pic remaining
                         </span>)}
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-between">
