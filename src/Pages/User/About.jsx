@@ -5,7 +5,7 @@ import userimg from "../../assets/images/Free.png";
 
 const About = () => {
     const isLoggedIn = localStorage.getItem("token");
-   const navigate = useNavigate();    
+    const navigate = useNavigate();    
 const handleClick = () => {
     navigate(isLoggedIn ? "/manageshop" : "/register");
   };
@@ -86,7 +86,7 @@ const handleClick = () => {
         <NavLink to="/">
           <button
            
-            className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold px-6 py-3 rounded-lg transition duration-300">
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl transition duration-300">
             ⬅️ Back to Home
           </button>
         </NavLink>

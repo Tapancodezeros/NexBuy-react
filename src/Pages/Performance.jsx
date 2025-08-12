@@ -28,8 +28,6 @@ const Performance = () => {
       .then((res) => {
         const fetchedProducts = res.data;
         setProducts(fetchedProducts);
-
-        // Calculate category-wise average ratings
         const categoryMap = {};
         fetchedProducts.forEach((product) => {
           const { category, rating } = product;
@@ -140,7 +138,7 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
+          <div className="bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Average Rating by Category (Bar Chart)
             </h3>
