@@ -87,17 +87,19 @@ const Product = () => {
                 const isLocal = product.id > 20;
                 const outofstock = isLocal && product.stock <= 0;
                 const fewstock =
-                  isLocal && product.stock <= 5 && product.stock >= 1;
+                isLocal && product.stock <= 5 && product.stock >= 1;
                 const price = product.afterdiscountprice
-                  ? product.afterdiscountprice.toFixed(0)
-            : (product.price * 83).toFixed(0);
+                ? product.afterdiscountprice.toFixed(0)
+                : (product.price * 83).toFixed(0);
                 const originalPrice = product.afterdiscountprice
-                  ? product.price.toFixed(0)
-                  : null;
+                ? product.price.toFixed(0)
+                : null;
                 const discount = product.discount ? product.discount : null;
+                console.log("🚀 ~ Product ~ products:", products)
+                console.log("🚀 ~ Product ~ category:", category)
                 return (
                   <NavLink
-                    to={`/product/${product.id}`}
+                  to={`/product/${product.id}`}
                     key={product.id}
                     className="relative bg-white rounded-2xl shadow-md hover:shadow-blue-500/40 transition-all duration-200 overflow-hidden flex flex-col"
                   >

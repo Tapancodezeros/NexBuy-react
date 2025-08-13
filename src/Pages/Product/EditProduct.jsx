@@ -116,12 +116,7 @@ const EditProduct = () => {
             required
           />
 
-          <input
-            type="text"
-            name="image"
-            value={product.image}
-            onChange={handleChange}
-            placeholder="Image URL"
+          <input type="text" name="image" value={product.image} onChange={handleChange} placeholder="Image URL"
             className="w-full p-3 border rounded-md focus:outline-blue-500"
             required
           />
