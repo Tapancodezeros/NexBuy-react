@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchUserProfile } from "../../api/apiService"
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -12,7 +12,7 @@ const Profile = () => {
   const token = localStorage.getItem("token");
  
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const getUserProfile = async () => {
       if (token === "local") {
         const localUser = JSON.parse(localStorage.getItem("dummyUser"));
         if (localUser) {
@@ -28,8 +28,8 @@ const Profile = () => {
         setLoading(false);
       } else {
         try {
-          const response = await axios.get(`https://dummyjson.com/users/${userId}`);
-          setUser(response.data);
+          const data = await fetchUserProfile(userId); // <-- Use service
+          setUser(data);
         } catch (error) {
           console.error("Failed to fetch user profile:", error);
         } finally {
@@ -38,7 +38,7 @@ const Profile = () => {
       }
     };
 
-    if (userId && token) fetchUserProfile();
+    if (userId && token) getUserProfile();
   }, [userId, token]);
 
   if (loading) {
@@ -56,7 +56,7 @@ const Profile = () => {
       </div>
     );
   }
-const handleLogout = () => {
+  const handleLogout = () => {
     toast.success("user logout successfully", { autoClose: 1000 })
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
