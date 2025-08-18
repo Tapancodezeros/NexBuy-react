@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   LineChart,
   Line,
@@ -14,6 +13,7 @@ import {
   Bar,
 } from "recharts";
 import { NavLink } from "react-router-dom";
+import { fetchProducts } from "../api/apiService";
 
 // Color palette for charts
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
@@ -23,33 +23,31 @@ const Performance = () => {
   const [categoryAvgRatings, setCategoryAvgRatings] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((res) => {
-        const fetchedProducts = res.data;
+    const getProducts = async () => {
+      try {
+        const fetchedProducts = await fetchProducts();
         setProducts(fetchedProducts);
         const categoryMap = {};
         fetchedProducts.forEach((product) => {
           const { category, rating } = product;
-
           if (!categoryMap[category]) {
             categoryMap[category] = { total: 0, count: 0 };
           }
-
           categoryMap[category].total += rating.rate;
           categoryMap[category].count += 1;
         });
-
         const avgRatings = Object.entries(categoryMap).map(
           ([category, { total, count }]) => ({
             category,
             avgRating: parseFloat((total / count).toFixed(2)),
           })
         );
-
         setCategoryAvgRatings(avgRatings);
-      })
-      .catch((err) => console.error("Error fetching products:", err));
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+    getProducts();
   }, []);
 
   const data = products.map((p, index) => ({
