@@ -1,0 +1,17 @@
+[
+  {
+    "icon": "MdPlace",
+    "title": "Find us",
+    "details":"NexBuy HQ - Mumbai, India"
+  },
+  {
+    "icon": "IoCallSharp",
+    "title": "Call us",
+    "details": "+91-9876543210"
+  },
+  {
+    "icon": "TbMailPlus",
+    "title": "Mail us",
+    "details": "support@nexbuy.com "
+  }
+]
