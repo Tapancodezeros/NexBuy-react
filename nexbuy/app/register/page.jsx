@@ -186,7 +186,7 @@ const Register = () => {
             alt="Registration illustration"
             width={96}
             height={40}
-            className="h-full w-full object-fill rounded-r-2xl"
+            className="h-full w-full object-fill rounded-r-2xl "
           />
         </div>
       </div>
