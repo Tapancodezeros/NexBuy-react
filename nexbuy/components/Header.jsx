@@ -12,7 +12,7 @@ export const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showAboutDropdown, setShowAboutDropdown] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState();
 
   const router = useRouter();
   const currentPath = usePathname();

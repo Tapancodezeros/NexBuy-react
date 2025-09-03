@@ -22,6 +22,18 @@ export default function Navigation() {
           <li className={pathname === "/login" ? "active" : ""}>
             <Link href="/login">Login</Link>
           </li>
+          <li className={pathname === "/register" ? "active" : ""}>
+            <Link href="/register">Register</Link>
+          </li>
+          <li className={pathname === "/performance" ? "active" : ""}>
+            <Link href="/performance">Performance</Link>
+          </li>
+          <li className={pathname === "/manageshop" ? "active" : ""}>
+            <Link href="/manageshop">Manage Shop</Link>
+          </li>
+          <li className={pathname === "/product" ? "active" : ""}>
+            <Link href="/product">Product</Link>
+          </li>
         </ul>
       </nav>
     </div>
