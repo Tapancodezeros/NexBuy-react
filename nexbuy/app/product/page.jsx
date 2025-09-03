@@ -120,13 +120,11 @@ const Product = () => {
                 const originalPrice = product.afterdiscountprice
                   ? product.price.toFixed(0)
                   : null;
-
                 return (
                   <div
                     key={product.id}
                     className="relative bg-white rounded-2xl shadow-md hover:shadow-blue-500/40 transition-all duration-200 overflow-hidden flex flex-col"
                   >
-                    {/* Clickable product area */}
                     <Link href={`/product/${product.id}`} className="flex-1 flex flex-col">
                       <div className="relative">
                         <img
@@ -149,7 +147,6 @@ const Product = () => {
                       <div className="p-4 flex flex-col flex-1">
                         <h3 className="font-semibold text-lg truncate">{product.title}</h3>
                         <p className="text-sm text-gray-500 mt-1 capitalize">{product.category}</p>
-
                         <div className="mt-2 flex justify-between items-center">
                           <div className="flex flex-col">
                             {originalPrice ? (
@@ -179,8 +176,6 @@ const Product = () => {
                         </div>
                       </div>
                     </Link>
-
-                    {/* Local product admin actions */}
                     {isLocal && (
                       <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
                         <button

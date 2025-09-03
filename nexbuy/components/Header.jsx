@@ -58,7 +58,7 @@ export const Header = () => {
           <Image
             src="/assets/images/NexGen.png"
             alt="logo"
-            width={96}
+            width={64}
             height={40}
             className="rounded-lg shadow-sm"
           />
