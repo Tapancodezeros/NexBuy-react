@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { signUpSchema } from "@/schemas/Signup";
@@ -6,6 +5,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+
 const initialValues = {
   name: "",
   username: "",
@@ -14,13 +14,11 @@ const initialValues = {
   password: "",
   confirm_password: "",
 };
-
 const Register = () => {
   const router = useRouter();
-
   const { values,errors,touched,handleBlur,handleChange,handleSubmit} = useFormik({initialValues,validationSchema: signUpSchema,onSubmit: (values, action) => {
       const { name, username, email, phone, password } = values;
-      const newUser = { name, username, email, phone, password };
+      const newUser = { name, username, email, phone, password };0
       localStorage.setItem("dummyUser", JSON.stringify(newUser));
       toast.success("Registered locally. Please login.", { autoClose: 1000 });
       action.resetForm();
@@ -35,7 +33,6 @@ const Register = () => {
       router.push("/");
     }
   }, [router]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 m">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-2">
@@ -43,7 +40,6 @@ const Register = () => {
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Register for <span className="text-blue-600">NexBuy</span>
           </h2>
-
           <form onSubmit={handleSubmit} className="space-y-5">
 
             <div>
@@ -65,7 +61,6 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.name}</p>
               )}
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">UserName</label>
               <input
@@ -145,7 +140,6 @@ const Register = () => {
                 <p className="text-sm text-red-600 mt-1">{errors.password}</p>
               )}
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
               <input
@@ -182,11 +176,11 @@ const Register = () => {
 
         <div className="hidden md:block">
           <Image
-            src="/assets/images/Free.png"
+            src="/image/Free.png"
             alt="Registration illustration"
-            width={96}
-            height={40}
-            className="h-full w-full object-fill rounded-r-2xl "
+            width={500}
+            height={900}
+            className="h-full w-full rounded-r-2xl "
           />
         </div>
       </div>

@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter, usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
@@ -13,7 +12,6 @@ export const Header = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showAboutDropdown, setShowAboutDropdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState();
-
   const router = useRouter();
   const currentPath = usePathname();
 
@@ -22,9 +20,7 @@ export const Header = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
     }
   }, []);
-
   const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
-
   const handleLogout = () => {
     toast.success("User logout successfully", { autoClose: 1000 });
     localStorage.removeItem("token");
@@ -46,7 +42,6 @@ export const Header = () => {
         : `text-${inactiveColor}-800 hover:bg-${inactiveColor}-100`
     }`;
   };
-
   return (
     <header className="backdrop-blur bg-white/120 border-b shadow-sm fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -56,7 +51,7 @@ export const Header = () => {
           className="cursor-pointer flex items-center"
         >
           <Image
-            src="/assets/images/NexGen.png"
+            src="/image/NexGen.png"
             alt="logo"
             width={64}
             height={40}
@@ -111,8 +106,7 @@ export const Header = () => {
                   <Link
                     href="/contact"
                     className="w-full block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setShowAboutDropdown(false)}
-                  >
+                    onClick={() => setShowAboutDropdown(false)}>
                     Contact
                   </Link>
                 </li>

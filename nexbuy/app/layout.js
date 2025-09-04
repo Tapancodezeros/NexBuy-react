@@ -4,20 +4,26 @@ import { Footer } from '../components/Footer'
 import { ToastContainer } from 'react-toastify'
 
 export const metadata = {
-  title: 'NexBuy',
+  title: { 
+    template: '%s | NexBuy',
+    default: 'NexBuy'
+  },
   description: 'Your one-stop shop for all things tech!',
-}
 
+icons: {
+  icon: "/image/NexGen.png",
+}
+}
 export default function RootLayout({ children }) {
   return (
     <html  lang="en">
       <body>
-      <div>
         <ToastContainer />
-        <Header />
+        <div>
+          <Header />
           {children}
-        <Footer />
-      </div>
+          <Footer />
+        </div>
       </body>
     </html>
   )

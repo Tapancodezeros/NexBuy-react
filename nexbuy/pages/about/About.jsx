@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import free from "@/public/image/Free.png"; 
 const About = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,11 +32,10 @@ const About = () => {
       <main className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
         <div className="flex justify-center">
           <Image
-            src="/assets/images/Free.png"
+            src={free}
             alt="NexBuy Seller"
-            height={54}
-            width={96}
-            className="w-full max-w-md rounded-lg shadow-lg transition-transform duration-300 hover:scale-105 object-cover h-auto"
+ 
+            className="w-full h-[300] max-w-md rounded-lg shadow-lg transition-transform duration-300 hover:scale-105 object-cover"
           />
         </div>
         <div className="space-y-6 text-gray-800 leading-relaxed">

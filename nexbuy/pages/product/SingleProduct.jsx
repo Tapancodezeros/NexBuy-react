@@ -1,12 +1,13 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchProductById } from "@/app/api/apiService";
 import Link from "next/link";
 
+
 const SingleProduct = () => {
-  const { id } = useParams();
+  const params = useParams();
   const [product, setProduct] = useState(null);
+  const id = params ? params.id : null;
   const router = useRouter();
 
   useEffect(() => {
@@ -63,7 +64,6 @@ const SingleProduct = () => {
         </Link>
 
         <div className="grid md:grid-cols-2 gap-10 items-start">
-          {/* Product Image */}
           <div className="relative bg-gray-100 p-6 rounded-xl shadow-inner flex items-center justify-center">
             <img
               src={product.image}
@@ -77,7 +77,7 @@ const SingleProduct = () => {
             )}
             {fewstock && (
               <span className="absolute bottom-2 left-2 bg-amber-300 text-black text-xs font-bold px-2 py-1 rounded">
-                Last {product.stock} left
+                Last {product.stock} piece left
               </span>
             )}
           </div>
@@ -134,12 +134,12 @@ const SingleProduct = () => {
 
             {isLocal && (
               <div className="flex justify-center mt-8">
-                <button
-                  onClick={() => handleEdit(product.id)}
-                  className="bg-black px-5 py-3 text-white rounded hover:bg-gray-800 text-sm"
-                >
-                  ✏️ Edit
-                </button>
+                 <button
+                          onClick={() => handleEdit(product.id)}
+                          className="bg-black hover:bg-yellow-500 text-white px-4 py-1.5 rounded-lg text-sm transition"
+                        >
+                          ✏️ Edit
+                        </button>
               </div>
             )}
           </div>

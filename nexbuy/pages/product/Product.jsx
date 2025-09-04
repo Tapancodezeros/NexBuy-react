@@ -139,7 +139,7 @@ const Product = () => {
                         )}
                         {fewstock && (
                           <span className="absolute bottom-2 left-2 bg-amber-300 text-black text-xs font-semibold px-2 py-1 rounded">
-                            Last {product.stock} left
+                            Last {product.stock} piece left
                           </span>
                         )}
                       </div>

@@ -1,4 +1,4 @@
-
+"use client";
 import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -9,22 +9,37 @@ const Profile = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
+
+  const getLocalItem = (key) => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key);
+    }
+    return null;
+  };
+
+  const userId = getLocalItem("userId");
+  const token = getLocalItem("token");
 
   useEffect(() => {
     const getUserProfile = async () => {
       if (token === "local") {
-        const localUser = JSON.parse(localStorage.getItem("dummyUser"));
-        if (localUser) {
-          setUser({
-            firstName: localUser.name,
-            lastName: "",
-            email: localUser.email,
-            phone: localUser.phone,
-            username: localUser.username,
-            image: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-          });
+        try {
+          const localUser =
+            typeof window !== "undefined" &&
+            JSON.parse(localStorage.getItem("dummyUser"));
+
+          if (localUser) {
+            setUser({
+              firstName: localUser.name,
+              lastName: "",
+              email: localUser.email,
+              phone: localUser.phone,
+              username: localUser.username,
+              image: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+            });
+          }
+        } catch (err) {
+          console.error("Error parsing local user:", err);
         }
         setLoading(false);
       } else {
@@ -40,6 +55,7 @@ const Profile = () => {
     };
 
     if (userId && token) getUserProfile();
+    else setLoading(false);
   }, [userId, token]);
 
   if (loading) {
@@ -60,9 +76,11 @@ const Profile = () => {
 
   const handleLogout = () => {
     toast.success("User logged out successfully", { autoClose: 1000 });
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("contactData");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("contactData");
+    }
     router.push("/");
   };
 
@@ -95,7 +113,7 @@ const Profile = () => {
           </p>
         </div>
 
-    
+        {/* Actions */}
         <div className="flex items-center justify-center mt-8 gap-4">
           <button
             onClick={() => router.back()}

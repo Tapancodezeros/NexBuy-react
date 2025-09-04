@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useRouter ,useParams} from "next/navigation"; 
+import { useRouter , useParams} from "next/navigation"; 
 const CATEGORIES = ["electronics", "jewelery", "men's clothing", "women's clothing"];
 
 const EditProduct = () => {
-  const { id } = useParams();
+  const params = useParams();
   const router = useRouter();
+  const id = params ? params.id : null;
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -82,14 +83,8 @@ const EditProduct = () => {
           />
 
           <input
-            type="number"
-            name="price"
-            value={product.price}
-            onChange={handleChange}
-            placeholder="Price"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
-          />
+            type="number" name="price" value={product.price} onChange={handleChange} placeholder="Price"
+            className="w-full p-3 border rounded-md focus:outline-blue-500" required />
 
           <input
             type="number"
