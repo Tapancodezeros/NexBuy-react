@@ -1,24 +1,9 @@
-
 import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-} from "recharts";
+import {LineChart,Line,XAxis,YAxis,Tooltip,ResponsiveContainer,PieChart,Pie,Cell,BarChart,Bar} from "recharts";
 import Link from "next/link";
 import { fetchProducts } from "@/app/api/apiService";
-
 // Color palette for charts
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
-
 const Performance = () => {
   const [products, setProducts] = useState([]);
   const [categoryAvgRatings, setCategoryAvgRatings] = useState([]);
@@ -74,13 +59,12 @@ const Performance = () => {
             </button>
           </Link>
         </div>
-
         <h2 className="text-4xl font-extrabold text-gray-800 mb-10 text-center">
           📈 Product Performance Dashboard
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:scale-110 hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product Ratings (Line Chart)
             </h3>
@@ -98,8 +82,7 @@ const Performance = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 min-h-[450px]">
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:scale-110 transition-transform transform hover:-translate-y-1 min-h-[450px]">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Product-wise Ratings & Count (Pie Chart)
             </h3>
@@ -137,7 +120,7 @@ const Performance = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
+          <div className="bg-white p-4 rounded-2xl shadow-md hover:scale-110 hover:shadow-lg transition-transform transform hover:-translate-y-1 lg:col-span-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Average Rating by Category (Bar Chart)
             </h3>
@@ -155,8 +138,7 @@ const Performance = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>    
   );
 };
-
 export default Performance;
