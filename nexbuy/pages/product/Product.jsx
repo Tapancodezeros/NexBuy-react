@@ -76,7 +76,6 @@ const Product = () => {
               ⬅️ Go Back
             </button>
           </Link>
-
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <select
               value={selectedCat}
@@ -90,7 +89,6 @@ const Product = () => {
                 </option>
               ))}
             </select>
-
             <Link
               href="/add-product"
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-xl shadow transition"
@@ -99,7 +97,6 @@ const Product = () => {
             </Link>
           </div>
         </div>
-
         {/* Products by category */}
         {categoryProducts.map(({ category, products }) => (
           <div key={category} className="mb-12">
