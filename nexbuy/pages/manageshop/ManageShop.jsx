@@ -170,13 +170,13 @@ const ManageShop = () => {
                 <div className="flex flex-col gap-1 text-right">
                  <button
                   onClick={() => handleEdit(idx)}
-                  className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors duration-200 ml-2"
+                  className="px-3 py-1 text-sm text-white bg-blue-500 hover:scale-110 rounded hover:bg-blue-600 transition-colors duration-200 ml-2"
                 >
                   ✏️ Edit
                 </button>
                 <button
                   onClick={() => handleDelete(idx)}
-                  className="px-3 py-1 text-sm text-black bg-red-500 rounded hover:bg-red-700 transition-colors duration-200 ml-2"
+                  className="px-3 py-1 text-sm text-black bg-red-500 hover:scale-110 rounded hover:bg-red-700 transition-colors duration-200 ml-2"
                 >
                   ❌ Delete
                 </button>
