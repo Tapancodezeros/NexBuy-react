@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { signUpSchema } from "@/schemas/Signup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { createNewUser } from "@/app/api/apiService";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,20 +11,40 @@ const initialValues = {
   name: "",
   username: "",
   email: "",
-  phone: "",
+  image: "",
   password: "",
   confirm_password: "",
 };
 const Register = () => {
   const router = useRouter();
-  const { values,errors,touched,handleBlur,handleChange,handleSubmit} = useFormik({initialValues,validationSchema: signUpSchema,onSubmit: (values, action) => {
-      const { name, username, email, phone, password } = values;
-      const newUser = { name, username, email, phone, password };0
-      localStorage.setItem("dummyUser", JSON.stringify(newUser));
-      toast.success("Registered locally. Please login.", { autoClose: 1000 });
-      action.resetForm();
-      setTimeout(() => router.push("/login"), 1200);
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+ initialValues,
+ validationSchema: signUpSchema,
+ onSubmit: async (values, action) => {
+ try {
+ const { name, username, email, image, password } = values;
+ const [firstName, ...lastNameParts] = name.split(" ");
+ const lastName = lastNameParts.join(" ");
+
+        const userData = {
+          firstName,
+          lastName,
+          username,
+          email,
+          image,
+          password,
+        };
+
+        const res = await createNewUser(userData);
+        toast.success("Registration successful!", { autoClose: 1000 });
+        action.resetForm();
+        router.push("/login");
+      } catch (error) {
+        console.error("Registration failed:", error);
+        toast.error(error.response?.data?.message || "Registration failed. Please try again.");
+      }
     },
+
   });
 
   useEffect(() => {
@@ -102,22 +123,21 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
               <input
-                type="tel"
-                name="phone"
-                id="phone"
-                value={values.phone}
+                type="text"
+                name="image"
+                id="image"
+                value={values.image}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                onWheel={(e) => e.target.blur()}
                 className={`w-full px-4 py-2 border ${
-                  errors.phone && touched.phone ? "border-red-500" : "border-gray-300"
+                  errors.image && touched.image ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
-                placeholder="1234567890"
+                placeholder="https://example.com/image.jpg"
               />
-              {errors.phone && touched.phone && (
-                <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
+              {errors.image && touched.image && (
+                <p className="text-sm text-red-600 mt-1">{errors.image}</p>
               )}
             </div>
 

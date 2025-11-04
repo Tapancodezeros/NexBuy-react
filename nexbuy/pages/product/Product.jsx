@@ -1,203 +1,289 @@
-
-
+"use client";
 import { useEffect, useState } from "react";
-import { fetchCategories, fetchProductsByCategory } from "@/app/api/apiService";
+import {
+  fetchCategories,
+  fetchAllProducts,
+  deleteProduct,
+} from "@/app/api/apiService";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FaArrowLeft, FaPlus, FaFilter, FaEdit, FaTrashAlt, FaStar, FaRupeeSign, FaList, FaTag, FaShoppingCart } from "react-icons/fa";
+import { BiCategory } from "react-icons/bi"; // Icon for category select
 
 const Product = () => {
   const [categories, setCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [selectedCat, setSelectedCat] = useState("all");
   const router = useRouter();
 
-  const getLocalProducts = () =>
-    JSON.parse(localStorage.getItem("products")) || [];
-
-  const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this Product?")) return;
-    const updatedProducts = getLocalProducts().filter((p) => p.id !== id);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    toast.success("🗑️ Product deleted successfully");
-    loadProducts();
+  const handleDelete = async (id) => {
+    if (confirm("Are you sure you want to permanently delete this product?")) { 
+      try {
+        await deleteProduct(id);
+        toast.success(
+          <div className="flex items-center">
+            <FaTrashAlt className="mr-2 text-red-500" /> Product deleted successfully!
+          </div>
+        );
+        // Refresh data after deletion
+        setAllProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
+      } catch (error) {
+        console.error(`Failed to delete product with ID ${id}:`, error);
+        toast.error("Failed to delete product.");
+      }
+    }
   };
 
   const handleEdit = (id) => {
     router.push(`/edit-product/${id}`);
   };
 
-  const loadProducts = async () => {
-    const cats = await fetchCategories();
-    setCategories(cats);
+  // Groups an array of products by their category
+  const groupProductsByCategory = (products) => {
+    const grouped = products.reduce((acc, product) => {
+      const category = product.category || 'other';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(product);
+      return acc;
+    }, {});
 
-    const localProducts = getLocalProducts();
-    const productsByCategory = await Promise.all(
-      cats.map(async (cat) => {
-        const apiProducts = await fetchProductsByCategory(cat);
-        const localForCat = localProducts.filter((p) => p.category === cat);
-        return {
-          category: cat,
-          products: [...apiProducts, ...localForCat],
-        };
-      })
-    );
+    return Object.keys(grouped).map(category => ({
+      category,
+      products: grouped[category],
+    }));
+  };
 
-    setCategoryProducts(productsByCategory);
+  const loadInitialData = async () => {
+    try {
+      const [cats, products] = await Promise.all([
+        fetchCategories(),
+        fetchAllProducts(),
+      ]);
+
+      const categoryArray = Array.isArray(cats) ? cats : cats?.categories || [];
+      const uniqueCategories = Array.from(new Set([...categoryArray, 'other']));
+      setCategories(uniqueCategories);
+      setAllProducts(products);
+      setCategoryProducts(groupProductsByCategory(products));
+      setSelectedCat("all");
+    } catch (error) {
+      console.error("Error loading initial data:", error);
+      toast.error("Failed to load products");
+    }
   };
 
   useEffect(() => {
-    loadProducts();
+    loadInitialData();
   }, []);
 
-  const handleChange = async (e) => {
+  useEffect(() => {
+    if (selectedCat === "all") {
+      setCategoryProducts(groupProductsByCategory(allProducts));
+    } else {
+      const filtered = allProducts.filter((p) => p.category === selectedCat || (selectedCat === 'other' && !p.category));
+      setCategoryProducts([{ category: selectedCat, products: filtered }]);
+    }
+  }, [allProducts, selectedCat]);
+
+  const handleChange = (e) => {
     const selected = e.target.value;
     setSelectedCat(selected);
 
-    const localProducts = getLocalProducts();
     if (selected === "all") {
-      loadProducts();
+      setCategoryProducts(groupProductsByCategory(allProducts));
     } else {
-      const apiProducts = await fetchProductsByCategory(selected);
-      const localForCat = localProducts.filter((p) => p.category === selected);
+      const productsForCategory = allProducts.filter(
+        (p) => p.category === selected || (selected === 'other' && !p.category)
+      );
       setCategoryProducts([
-        { category: selected, products: [...apiProducts, ...localForCat] },
+        { category: selected, products: productsForCategory },
       ]);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-300 to-white px-4 py-10 my-20">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-          <Link href="/">
-            <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl shadow transition">
-              ⬅️ Go Back
-            </button>
-          </Link>
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <select
-              value={selectedCat}
-              onChange={handleChange}
-              className="min-w-[180px] p-2 border border-gray-300 rounded-lg shadow-sm bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-            >
-              <option value="all">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </option>
-              ))}
-            </select>
-            <Link
-              href="/add-product"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-xl shadow transition"
-            >
-              ✚ Add Product
-            </Link>
+  // --- Product Card Component for cleaner render logic ---
+  const ProductCard = ({ product }) => {
+    const stock = product.stock ?? 99; // Use product stock if available, otherwise assume 99
+    const outofstock = stock <= 0;
+    const fewstock = stock > 0 && stock <= 5;
+    // Price logic using INR conversion for external API prices
+    const price = product.afterdiscountprice
+      ? product.afterdiscountprice.toFixed(0)
+      : (product.price * 83).toFixed(0);
+    const originalPrice = product.afterdiscountprice
+      ? product.price.toFixed(0)
+      : null;
+
+    return (
+      <div
+        className="relative bg-white rounded-2xl shadow-xl border  border-gray-100 transition-all duration-300 transform hover:shadow-indigo-300/60 hover:-translate-y-1 overflow-hidden flex flex-col "
+      >
+        {/* Linkable Content Area */}
+        <Link
+          href={`/product/${product.id}`}
+          className="flex-1 flex flex-col"
+        >
+          <div className="relative h-56 w-full p-4 bg-gray-50 flex items-center justify-center border-b border-gray-100">
+            <img
+              src={product.image}
+              alt={product.title}
+              className="max-h-full max-w-full object-contain"
+            />
+            {/* Stock Badges */}
+            {outofstock && (
+              <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                Sold Out
+              </span>
+            )}
+            {fewstock && (
+              <span className="absolute top-3 right-3 bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                Only {stock} Left!
+              </span>
+            )}
           </div>
-        </div>
-        {/* Products by category */}
-        {categoryProducts.map(({ category, products }) => (
-          <div key={category} className="mb-12">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
-              {category}
-            </h3>
+          
+          <div className="p-5 flex flex-col flex-1">
+            <div className="flex justify-between items-start mb-2">
+                <h3 className="font-extrabold text-xl text-gray-900 line-clamp-2 leading-snug">
+                  {product.title}
+                </h3>
+                {product.rating?.rate ? (
+                    <span className="flex items-center text-sm font-semibold bg-yellow-100 px-3 py-1 rounded-full text-yellow-800 whitespace-nowrap ml-2">
+                      <FaStar className="mr-1" /> {product.rating.rate}
+                    </span>
+                  ) : (
+                    <span className="text-xs italic text-gray-400 mt-1 whitespace-nowrap">
+                      Unrated
+                    </span>
+                  )}
+            </div>
+            
+            <p className="text-xs text-indigo-600 uppercase tracking-widest font-medium">
+              {product.category || 'Miscellaneous'}
+            </p>
 
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {products.map((product) => {
-                const isLocal = product.id > 20;
-                const outofstock = isLocal && product.stock <= 0;
-                const fewstock = isLocal && product.stock <= 5 && product.stock >= 1;
-
-                const price = product.afterdiscountprice
-                  ? product.afterdiscountprice.toFixed(0)
-                  : (product.price * 83).toFixed(0);
-
-                const originalPrice = product.afterdiscountprice
-                  ? product.price.toFixed(0)
-                  : null;
-                return (
-                  <div
-                    key={product.id}
-                    className="relative bg-white rounded-2xl shadow-md hover:shadow-blue-500/40 transition-all duration-200 overflow-hidden flex flex-col"
-                  >
-                    <Link href={`/product/${product.id}`} className="flex-1 flex flex-col">
-                      <div className="relative">
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="h-48 w-full object-contain p-4 bg-gray-50"
-                        />
-                        {outofstock && (
-                          <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                            Out of Stock
-                          </span>
-                        )}
-                        {fewstock && (
-                          <span className="absolute bottom-2 left-2 bg-amber-300 text-black text-xs font-semibold px-2 py-1 rounded">
-                            Last {product.stock} piece left
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="p-4 flex flex-col flex-1">
-                        <h3 className="font-semibold text-lg truncate">{product.title}</h3>
-                        <p className="text-sm text-gray-500 mt-1 capitalize">{product.category}</p>
-                        <div className="mt-2 flex justify-between items-center">
-                          <div className="flex flex-col">
-                            {originalPrice ? (
-                              <>
-                                <span className="text-sm text-gray-500 line-through">
-                                  ₹{originalPrice}
-                                </span>
-                                <span className="text-blue-400 font-extrabold text-lg">
-                                  Discount {product.discount}%
-                                </span>
-                                <span className="text-green-600 font-bold text-lg">
-                                  ₹{price}
-                                </span>
-                              </>
-                            ) : (
-                              <span className="text-green-600 font-bold text-lg">₹{price}</span>
-                            )}
-                          </div>
-
-                          {product.rating?.rate ? (
-                            <span className="text-sm bg-yellow-100 px-2 py-1 rounded text-yellow-800">
-                              ⭐ {product.rating.rate}
-                            </span>
-                          ) : (
-                            <span className="text-sm italic text-gray-400">No Rating</span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                    {isLocal && (
-                      <div className="flex justify-center gap-3 p-3 border-t border-gray-100 bg-gray-50">
-                        <button
-                          onClick={() => handleEdit(product.id)}
-                          className="bg-black hover:bg-yellow-500 text-white px-4 py-1.5 rounded-lg text-sm transition"
-                        >
-                          ✏️ Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          className="bg-red-300 hover:bg-red-500 text-black px-4 py-1.5 rounded-lg text-sm transition"
-                        >
-                          ❌ Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            {/* Price Block */}
+            <div className="mt-4 pt-4 border-t border-dashed border-gray-200">
+              {originalPrice ? (
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-500 line-through">
+                    <FaRupeeSign className="inline w-3 h-3 mb-0.5" />{originalPrice}
+                  </span>
+                  <span className="text-xl font-extrabold text-green-600 flex items-center">
+                    <FaRupeeSign className="mr-1 w-4 h-4" />{price}
+                  </span>
+                  <span className="text-sm font-semibold text-indigo-500 mt-0.5">
+                    Save {product.discount}%
+                  </span>
+                </div>
+              ) : (
+                <span className="text-2xl font-extrabold text-gray-800 flex items-center">
+                  <FaRupeeSign className="mr-1 w-4 h-4" />{price}
+                </span>
+              )}
             </div>
           </div>
-        ))}
+        </Link>
+        
+        {/* Action Buttons (Local Products Only) */}
+        <div className="flex justify-between p-4 bg-gray-50 border-t border-gray-100">
+          <button
+            onClick={() => handleEdit(product.id)}
+            className="flex items-center justify-center flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition-all shadow-md mr-2"
+          >
+            <FaEdit className="mr-2" /> Edit
+          </button>
+          <button
+            onClick={() => handleDelete(product.id)}
+            className="flex items-center justify-center flex-1 bg-red-100 hover:bg-red-500 hover:text-white text-red-700 font-medium py-2 rounded-lg text-sm transition-all shadow-md ml-2"
+          >
+            <FaTrashAlt className="mr-2" /> Delete
+          </button>
+        </div>
+      </div>
+    );
+  };
+  // --- Main Component Render ---
+  return (
+    <div className="min-h-screen bg-gray-50 px-4 pt-8 pb-16 my-15">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Sticky Header / Toolbar */}
+        <div className="sticky top-0 z-10 bg-white rounded-xl shadow-lg p-5 mb-8 border-b border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            
+            {/* Navigation & Title */}
+            <div className="flex items-center gap-4">
+              <Link href="/">
+                <button className="flex items-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg transition-all shadow-sm text-sm">
+                  <FaArrowLeft className="mr-2" />
+                  Go Back
+                </button>
+              </Link>
+              <h1 className="text-2xl font-extrabold text-gray-900 hidden md:block">
+                <FaShoppingCart className="inline text-indigo-600 mr-2" /> Product Inventory
+              </h1>
+            </div>
+
+            {/* Controls: Filter & Add */}
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              
+              {/* Category Filter */}
+              <div className="relative flex items-center w-full sm:w-auto">
+                <BiCategory className="absolute left-3 text-gray-500 pointer-events-none" />
+                <select
+                  value={selectedCat}
+                  onChange={handleChange}
+                  className="min-w-[180px] p-3 pl-9 border border-gray-300 rounded-xl shadow-inner bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-600 appearance-none transition duration-150"
+                >
+                  <option value="all">All Categories ({allProducts.length})</option>
+                  {Array.isArray(categories) &&
+                    categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              
+              {/* Add Product Button */}
+              <Link
+                href="/add-product"
+                className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-3 rounded-xl shadow-md transition-all transform hover:scale-[1.02]"
+              >
+                <FaPlus className="mr-2" /> Add New Product
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Products by category */}
+        {categoryProducts.length === 0 ? (
+           <p className="text-center text-xl text-gray-500 py-20">
+              No products found in the selected category.
+           </p>
+        ) : (
+          categoryProducts.map(({ category, products }) => (
+            <div key={category} className="mb-14">
+              <h3 className="text-3xl font-bold text-gray-800 mb-6 capitalize border-b-4 border-indigo-200 inline-block pb-1">
+                <FaList className="inline mr-2 text-indigo-600" />
+                {category === 'other' ? 'Miscellaneous' : category}
+                <span className="ml-3 text-lg font-normal text-gray-500">({products.length} Items)</span>
+              </h3>
+              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
 };
-
 export default Product;

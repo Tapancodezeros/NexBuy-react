@@ -1,159 +1,249 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useRouter , useParams} from "next/navigation"; 
-const CATEGORIES = ["electronics", "jewelery", "men's clothing", "women's clothing"];
+import { useRouter, useParams } from "next/navigation";
+import { fetchProductById, updateProduct } from "@/app/api/apiService";
+import { fetchCategories } from "@/app/api/apiService";
+import { FaTag, FaDollarSign, FaPercent, FaInfoCircle, FaImage, FaBoxes, FaArrowLeft, FaRupeeSign } from "react-icons/fa"; // Imported icons for a better look
 
 const EditProduct = () => {
   const params = useParams();
   const router = useRouter();
   const id = params ? params.id : null;
   const [product, setProduct] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [priceInr, setPriceInr] = useState("");
 
   useEffect(() => {
-    const localProducts = JSON.parse(localStorage.getItem("products")) || [];
-    const targetProduct = localProducts.find((p) => p.id === parseInt(id));
+    if (!id) return;
 
-    if (!targetProduct) {
-      toast.error("Product not found");
-      return router.push("/product");
-    }
-    setProduct(targetProduct);
+    const getProduct = async () => {
+      try {
+        const [productData, fetchedCategories] = await Promise.all([
+          fetchProductById(id),
+          fetchCategories(),
+        ]);
+        setProduct(productData);
+        setCategories(fetchedCategories);
+        if (productData && productData.price) {
+          setPriceInr((productData.price * 83).toFixed(2)); // Convert USD to INR
+        }
+      } catch (error) {
+        console.error("Failed to fetch product:", error);
+        toast.error("Product not found or failed to load.");
+        router.push("/product");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProduct();
   }, [id, router]);
 
+  // --- Effect to calculate discounted price ---
   useEffect(() => {
     if (!product) return;
 
-    const price = parseFloat(product.price);
+    const price = parseFloat(priceInr); // Use INR price for calculation
     const discount = parseFloat(product.discount);
 
-    if (!isNaN(price) && !isNaN(discount)) {
-      if (discount > 99 || discount < 1) {
-        toast.warn("Discount must be between & Equal to 0% and 100%");
-        setProduct((prev) => ({ ...prev, discount: 5 }));
-      } else {
-        const afterDiscount = price - (price * discount) / 100;
-        setProduct((prev) => ({...prev,afterdiscountprice: afterDiscount.toFixed(2),
-        }));
-      }
+    if (!isNaN(price) && !isNaN(discount) && discount >= 0 && discount <= 100) {
+      const afterDiscount = price - (price * discount) / 100;
+      setProduct((prev) => ({
+        ...prev,
+        afterdiscountprice: afterDiscount.toFixed(2),
+      }));
     }
-  }, [product?.price, product?.discount]);
+  }, [priceInr, product?.discount]);
 
+  // --- Handle input changes ---
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({...prev,[name]: value,}));
+    if (name === "price") {
+      // Handle INR price input separately
+      setPriceInr(value);
+    } else {
+      setProduct((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  // --- Handle form submission ---
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedProducts = (JSON.parse(localStorage.getItem("products")) || []).map((p) =>
-      p.id === product.id
-        ? {
-            ...product,
-            price: parseFloat(product.price),
-            discount: parseFloat(product.discount),
-            afterdiscountprice: parseFloat(product.afterdiscountprice),
-            stock: parseInt(product.stock),
-          }
-        : p
-    );
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    toast.success("Product updated successfully!");
-    router.push("/product");
+    if (!product) return;
+
+    try {
+      const productData = {
+        ...product,
+        price: parseFloat(priceInr) / 83, // Convert INR back to USD for API
+        discount: parseFloat(product.discount),
+        afterdiscountprice: parseFloat(product.afterdiscountprice) / 83, // Convert INR back to USD
+        stock: parseInt(product.stock),
+      };
+      await updateProduct(id, productData);
+      toast.success("Product updated successfully!");
+      router.push("/product");
+    } catch (error) {
+      console.error("Failed to update product:", error);
+      toast.error(error.response?.data?.message || "Failed to update product.");
+    }
   };
 
-  if (!product) return <p className="text-center py-10">Loading...</p>;
+  if (loading) {
+    return <p className="text-center py-10 text-xl font-medium">Loading product details...</p>;
+  }
 
+  if (!product) return <p className="text-center py-10 text-xl font-medium text-red-500">Could not load product.</p>;
+  // --- Improved Design Structure ---
   return (
-    <div className=" min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-white to-white px-4 py-20 text-center">
-      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-8">
-        <h2 className="text-3xl font-semibold text-center mb-6">Edit Product</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full bg-white rounded-xl shadow-2xl p-8 transform transition-all hover:shadow-3xl border border-gray-100">
+        
+        {/* Header Section */}
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight flex items-center justify-center">
+            <FaTag className="mr-3 text-indigo-600" />
+            Edit Product
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Update the details for product ID: **{product.id}**
+          </p>
+        </div>
+        
+        {/* Form Section */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          
+          {/* Input Field: Title */}
+          <InputField
+            type="text" name="title" label="Product Title" icon={<FaInfoCircle />}
+            value={product.title} onChange={handleChange} required
+          />
+          
+          {/* Price & Discount Group */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            {/* Input Field: Price */}
+            <InputField
+              type="number" name="price" label="Original Price (INR)" icon={<FaRupeeSign />}
+              value={priceInr} onChange={handleChange} required min="0.01" step="0.01"
+            />
+            
+            {/* Input Field: Discount */}
+            <InputField
+              type="number" name="discount" label="Discount (%)" icon={<FaPercent />}
+              value={product.discount || ''} onChange={handleChange} min="0" max="100"
+            />
+            
+            {/* Input Field: Discounted Price (Read-Only) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 flex items-center mb-1">
+                <FaDollarSign className="mr-1" /> Discounted Price
+              </label>
+              <input
+                type="text"
+                name="afterdiscountprice"
+                value={`₹${product.afterdiscountprice || '0.00'}`}
+                readOnly
+                placeholder="Discounted Price"
+                className="w-full p-3 border border-gray-300 rounded-lg bg-indigo-50 text-indigo-800 font-bold focus:outline-none"
+              />
+            </div>
+          </div>
 
-        <form onSubmit={handleSubmit} className="max-w-m mx-auto space-y-3">
-          <input
-            type="text"
-            name="title"
-            value={product.title}
-            onChange={handleChange}
-            placeholder="Title"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
+          {/* Textarea Field: Description */}
+          <TextareaField
+            name="description" label="Product Description" icon={<FaInfoCircle />}
+            value={product.description} onChange={handleChange} required
+          />
+          
+          {/* Input Field: Image URL */}
+          <InputField
+            type="text" name="image" label="Image URL" icon={<FaImage />}
+            value={product.image} onChange={handleChange} required
           />
 
-          <input
-            type="number" name="price" value={product.price} onChange={handleChange} placeholder="Price"
-            className="w-full p-3 border rounded-md focus:outline-blue-500" required />
+          {/* Category & Stock Group */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Select Field: Category */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 flex items-center mb-1">
+                <FaTag className="mr-1" /> Category
+              </label>
+              <select
+                name="category"
+                value={product.category}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 appearance-none"
+                required
+              >
+                <option value="" disabled>Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <input
-            type="number"
-            name="discount"
-            value={product.discount}
-            onChange={handleChange}
-            placeholder="Discount (%)"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
-          />
+            {/* Input Field: Stock */}
+            <InputField
+              type="number" name="stock" label="Stock Quantity" icon={<FaBoxes />}
+              value={product.stock || ''} onChange={handleChange} required min="0"
+            />
+          </div>
 
-          <input
-            type="number"
-            name="afterdiscountprice"
-            value={product.afterdiscountprice}
-            readOnly
-            placeholder="Discounted Price"
-            className="w-full p-3 border rounded-md bg-gray-100 cursor-not-allowed text-gray-500"
-          />
-
-          <textarea
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            placeholder="Description"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
-          />
-
-          <input type="text" name="image" value={product.image} onChange={handleChange} placeholder="Image URL"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
-          />
-
-          <select
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:scale-[1.01]"
           >
-            <option value="">Select Category</option>
-            {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="number"
-            name="stock"
-            value={product.stock}
-            onChange={handleChange}
-            placeholder="Stock"
-            className="w-full p-3 border rounded-md focus:outline-blue-500"
-            required
-          />
-
-          <button type="submit"className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-all" >Update Product</button>
+            Update Product Details
+          </button>
         </form>
 
-        <div className="flex justify-center mt-6">
-          <Link href="/product">
-            <button className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition">⬅️ Go Back</button>
+        {/* Back Button */}
+        <div className="mt-8 flex justify-center">
+          <Link href="/product" passHref>
+            <button className="flex items-center text-sm font-medium text-gray-600 hover:text-indigo-600 transition">
+              <FaArrowLeft className="mr-2" />
+              Go back to Product List
+            </button>
           </Link>
         </div>
       </div>
     </div>
   );
 };
+
+// --- Reusable Input Component for a Cleaner Form ---
+const InputField = ({ label, name, value, onChange, icon, ...props }) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700 flex items-center mb-1">
+      {icon} <span className="ml-1">{label}</span>
+    </label>
+    <input
+      id={name} name={name} value={value} onChange={onChange}
+      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 transition duration-150"
+      {...props}
+    />
+  </div>
+);
+
+// --- Reusable Textarea Component ---
+const TextareaField = ({ label, name, value, onChange, icon, ...props }) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700 flex items-center mb-1">
+      {icon} <span className="ml-1">{label}</span>
+    </label>
+    <textarea
+      id={name} name={name} value={value} onChange={onChange} rows="3"
+      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 transition duration-150"
+      {...props}
+    />
+  </div>
+);
+
 export default EditProduct;

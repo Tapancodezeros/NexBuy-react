@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaHome, FaInfoCircle, FaPhone, FaStore, FaChartLine, FaSignInAlt, FaUserPlus, FaSignOutAlt, FaPlusSquare } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -20,9 +20,11 @@ export const Header = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
     }
   }, []);
+
   const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
+  
   const handleLogout = () => {
-    toast.success("User logout successfully", { autoClose: 1000 });
+    toast.success("User logged out successfully", { autoClose: 1000 });
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("contactData");
@@ -30,64 +32,70 @@ export const Header = () => {
     router.push("/");
   };
 
-  const buttonClass = (
-    path,
-    activeColor = "blue",
-    inactiveColor = "gray"
-  ) => {
+  // Centralized function for dynamic button styling
+  const getButtonClass = (path, accentColor = "indigo") => {
     const isActive = currentPath === path;
-    return `px-4 py-2 rounded-full transition-colors duration-200 font-semibold ${
-      isActive
-        ? `bg-${activeColor}-600 text-white shadow`
-        : `text-${inactiveColor}-800 hover:bg-${inactiveColor}-100`
-    }`;
+    const baseClass = "px-4 py-2 rounded-full transition-all duration-200 font-semibold text-sm flex items-center justify-center whitespace-nowrap";
+    
+    if (isActive) {
+      return `${baseClass} bg-${accentColor}-600 text-white shadow-md shadow-${accentColor}-500/50`;
+    } else {
+      return `${baseClass} text-gray-700 hover:bg-gray-100/70 hover:text-${accentColor}-600`;
+    }
   };
+
   return (
-    <header className="backdrop-blur bg-white/120 border-b shadow-sm fixed top-0 left-0 w-full z-50">
+    <header className="backdrop-blur-md bg-white/80 border-b border-gray-100 shadow-lg fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        
         {/* Logo */}
         <div
           onClick={() => router.push("/")}
-          className="cursor-pointer flex items-center"
+          className="cursor-pointer flex items-center transition-transform hover:scale-105"
         >
-          <Image
+          {/* Using a placeholder image since the asset is local */}
+          <img
             src="/image/NexGen.png"
-            alt="logo"
+            alt="NexBuy Logo"
             width={64}
             height={40}
-            className="rounded-lg shadow-sm"
+            className="rounded-lg shadow-md"
           />
         </div>
 
         {/* Hamburger (Mobile) */}
         <div
-          className="md:hidden text-3xl text-gray-700 cursor-pointer"
+          className="md:hidden text-3xl text-gray-700 cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition"
           onClick={toggleMobileMenu}
         >
           <GiHamburgerMenu />
         </div>
-        <div
-          className={`md:flex md:items-center md:gap-6 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible ${
-            showMobileMenu ? "max-h-[2000px] py-20" : "max-h-0"
+        
+        {/* Navigation Menu (Desktop & Mobile) */}
+        <nav
+          className={`md:flex md:items-center md:gap-6 transition-all duration-300 ease-in-out overflow-hidden md:overflow-visible absolute md:static top-full left-0 right-0 bg-white/95 md:bg-transparent shadow-xl md:shadow-none ${
+            showMobileMenu ? "max-h-[500px] py-4 border-t border-gray-200" : "max-h-0"
           } md:max-h-none w-full md:w-auto`}
         >
-          <ul className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 px-4 md:px-0 text-sm font-medium text-gray-700">
+          <ul className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-3 lg:gap-5 px-4 md:px-0 text-sm font-medium">
+            
             {/* Home */}
             <li>
-              <Link href="/" className={buttonClass("/", "blue")}>
-                Home
+              <Link href="/" className={getButtonClass("/", "indigo")}>
+                <FaHome className="mr-1" /> Home
               </Link>
             </li>
+            
             {/* About Dropdown */}
-            <li className="relative group">
+            <li className="relative group/about">
               <button
                 onClick={() => setShowAboutDropdown(!showAboutDropdown)}
-                className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
+                className="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors flex items-center gap-1 shadow-md shadow-indigo-500/50"
               >
-                About Us {showAboutDropdown ? "▲" : "▼"}
+                Info {showAboutDropdown ? "▲" : "▼"}
               </button>
               <ul
-                className={`absolute bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
+                className={`absolute bg-white border border-gray-200 text-gray-800 rounded-xl shadow-2xl mt-3 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform origin-top ${
                   showAboutDropdown
                     ? "opacity-100 translate-y-0 scale-100"
                     : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
@@ -96,18 +104,18 @@ export const Header = () => {
                 <li>
                   <Link
                     href="/about"
-                    className="w-full block px-4 py-2 hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center px-4 py-2 hover:bg-gray-50/70 hover:text-indigo-600 transition-colors"
                     onClick={() => setShowAboutDropdown(false)}
                   >
-                    About
+                    <FaInfoCircle className="mr-2" /> About NexBuy
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/contact"
-                    className="w-full block px-4 py-2 hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center px-4 py-2 hover:bg-gray-50/70 hover:text-indigo-600 transition-colors"
                     onClick={() => setShowAboutDropdown(false)}>
-                    Contact
+                    <FaPhone className="mr-2" /> Contact Us
                   </Link>
                 </li>
               </ul>
@@ -115,41 +123,45 @@ export const Header = () => {
 
             {isLoggedIn ? (
               <>
+                {/* Manage Shop */}
                 <li>
                   <Link
                     href="/manageshop"
-                    className={buttonClass("/manageshop", "blue")}
+                    className={getButtonClass("/manageshop", "indigo")}
                   >
-                    Manage Shop
+                    <FaStore className="mr-1" /> Shop
                   </Link>
                 </li>
+                {/* Product */}
                 <li>
                   <Link
                     href="/product"
-                    className={buttonClass("/product", "blue")}
+                    className={getButtonClass("/product", "indigo")}
                   >
-                    Product
+                    <FaPlusSquare className="mr-1" /> Products
                   </Link>
                 </li>
+                {/* Performance */}
                 <li>
                   <Link
                     href="/performance"
-                    className={buttonClass("/performance", "blue")}
+                    className={getButtonClass("/performance", "indigo")}
                   >
-                    Performance
+                    <FaChartLine className="mr-1" /> Performance
                   </Link>
                 </li>
 
-                <li className="relative group">
+                {/* Profile Dropdown */}
+                <li className="relative group/profile">
                   <button
                     onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                    className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2 shadow-md shadow-green-500/50"
                   >
                     <FaUserCircle className="text-xl" />
                     Profile {showProfileDropdown ? "▲" : "▼"}
                   </button>
                   <ul
-                    className={`absolute bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg mt-2 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 ${
+                    className={`absolute right-0 bg-white border border-gray-200 text-gray-800 rounded-xl shadow-2xl mt-3 w-44 space-y-1 py-2 z-50 transition-all duration-200 ease-in-out transform origin-top-right ${
                       showProfileDropdown
                         ? "opacity-100 translate-y-0 scale-100"
                         : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
@@ -158,48 +170,45 @@ export const Header = () => {
                     <li>
                       <Link
                         href="/profile"
-                        className="w-full block px-4 py-2 hover:bg-gray-100 transition-colors"
+                        className="w-full flex items-center px-4 py-2 hover:bg-gray-50/70 hover:text-indigo-600 transition-colors"
                         onClick={() => setShowProfileDropdown(false)}
                       >
-                        View Profile
+                        <FaUserCircle className="mr-2" /> View Profile
                       </Link>
                     </li>
                     <li>
                       <button
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors"
+                        className="w-full text-left flex items-center px-4 py-2 text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors"
                         onClick={() => {
                           setShowProfileDropdown(false);
                           handleLogout();
                         }}
                       >
-                        Logout
+                        <FaSignOutAlt className="mr-2" /> Logout
                       </button>
                     </li>
                   </ul>
                 </li>
               </>
             ) : (
-              <>
-                <li>
-                  <Link
-                    href="/login"
-                    className={buttonClass("/login", "blue")}
-                  >
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/register"
-                    className={buttonClass("/register", "green")}
-                  >
-                    Register
-                  </Link>
-                </li>
-              </>
+              // Login / Register Buttons
+              <li className="flex flex-col md:flex-row gap-3">
+                <Link
+                  href="/login"
+                  className={getButtonClass("/login", "indigo")}
+                >
+                  <FaSignInAlt className="mr-1" /> Login
+                </Link>
+                <Link
+                  href="/register"
+                  className={getButtonClass("/register", "green")}
+                >
+                  <FaUserPlus className="mr-1" /> Register
+                </Link>
+              </li>
             )}
           </ul>
-        </div>
+        </nav>
       </div>
     </header>
   );
