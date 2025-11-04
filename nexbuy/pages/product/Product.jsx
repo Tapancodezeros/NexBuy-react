@@ -1,14 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  fetchCategories,
-  fetchAllProducts,
-  deleteProduct,
-} from "@/app/api/apiService";
+import {fetchCategories,fetchAllProducts,deleteProduct,} from "@/app/api/apiService";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaPlus, FaFilter, FaEdit, FaTrashAlt, FaStar, FaRupeeSign, FaList, FaTag, FaShoppingCart } from "react-icons/fa";
+import { FaArrowLeft, FaPlus, FaEdit, FaTrashAlt, FaStar, FaRupeeSign, FaList,FaShoppingCart } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi"; // Icon for category select
 
 const Product = () => {

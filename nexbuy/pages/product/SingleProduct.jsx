@@ -2,47 +2,56 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchProductById } from "@/app/api/apiService";
 import Link from "next/link";
-import { FaArrowLeft, FaDollarSign, FaTag, FaBoxes, FaPencilAlt, FaStar, FaWarehouse } from "react-icons/fa";
+import { FaArrowLeft, FaTag, FaBoxes, FaPencilAlt, FaStar, FaWarehouse } from "react-icons/fa";
 
 const SingleProduct = () => {
   const params = useParams();
   const [product, setProduct] = useState(null);
-  const id = params ? params.id : null;
+  const id = params ? String(params.id) : null; 
   const router = useRouter();
 
   useEffect(() => {
     if (!id) return;
 
     const loadProduct = async () => {
-      const local = JSON.parse(localStorage.getItem("products")) || [];
-      const localProduct = local.find((p) => String(p.id) === id);
-
-      if (localProduct) {
-        setProduct(localProduct);
-      } else {
-        try {
-          // Assuming the external API uses USD, let's roughly convert for display
-          const apiProduct = await fetchProductById(id);
-          // Add a rough INR conversion for API products (assuming $1 ≈ ₹83)
-          const convertedProduct = {
-            ...apiProduct,
-            price: apiProduct.price, // Keep original price for reference
-            displayPrice: (apiProduct.price * 83).toFixed(0) // Display price in INR
-          };
-          setProduct(convertedProduct);
-        } catch (err) {
-          console.error("Product not found", err);
-        }
+      try {
+        const apiProduct = await fetchProductById(id);
+        
+        const convertedProduct = {
+          ...apiProduct,
+          price: apiProduct.price, 
+          displayPrice: (apiProduct.price * 83).toFixed(0) 
+        };
+        setProduct(convertedProduct);
+        
+      } catch (err) {
+        console.error("Product not found or API error:", err);
+        setProduct(false); 
       }
     };
     
     loadProduct();
   }, [id]);
 
-  const handleEdit = (id) => {
-    router.push(`/edit-product/${id}`);
+  const handleEdit = (productId) => {
+    router.push(`/edit-product/${productId}`);
   };
 
+  if (product === false) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-600 text-xl font-semibold p-8">
+        <h2 className="text-3xl text-red-500 mb-4">Product Not Found 😔</h2>
+        <Link
+          href="/product"
+          className="flex items-center text-sm font-semibold text-indigo-700 hover:text-indigo-900 transition mt-4"
+        >
+          <FaArrowLeft className="mr-2" />
+          Go back to Product List
+        </Link>
+      </div>
+    );
+  }
+  
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-600 text-xl font-semibold">
@@ -55,19 +64,15 @@ const SingleProduct = () => {
     );
   }
 
-  // Derived state for local/stock logic
-  const isLocal = product.id > 20;
-  const stock = isLocal ? product.stock : 99; // Default stock for API products
-  const outofstock = isLocal && stock <= 0;
-  const fewstock = isLocal && stock <= 5 && stock >= 1;
+  const stock = product.stock || 99; 
+  const outofstock = stock <= 0;
+  const fewstock = stock <= 5 && stock >= 1;
   const discount = product.discount ? product.discount : null;
   
-  // 💡 FIX: Safely convert price to number before calling .toFixed()
   const finalPrice = product.afterdiscountprice 
     ? Number(product.afterdiscountprice).toFixed(0) 
     : (product.displayPrice || (Number(product.price) * 83).toFixed(0));
 
-  // 💡 FIX: Safely convert price to number before calling .toFixed()
   const originalPrice = product.price 
     ? Number(product.price).toFixed(0) 
     : null;
@@ -76,7 +81,6 @@ const SingleProduct = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-3xl overflow-hidden border border-gray-100">        
-        {/* Header and Back Button */}
         <div className="p-6 md:p-8 border-b border-gray-100 flex justify-between items-center bg-indigo-50">
           <Link
             href="/product"
@@ -86,20 +90,16 @@ const SingleProduct = () => {
             Back to Product List
           </Link>
           <h1 className="text-3xl font-extrabold text-gray-800 hidden md:block">Product Detail View</h1>
-          {isLocal && (
-             <button
-                onClick={() => handleEdit(product.id)}
-                className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md"
-              >
-                <FaPencilAlt className="mr-2" /> Edit Product
-              </button>
-          )}
+          <button
+            onClick={() => handleEdit(id)}
+            className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md"
+          >
+            <FaPencilAlt className="mr-2" /> Edit Product
+          </button>
         </div>
 
-        {/* Product Grid */}
         <div className="grid lg:grid-cols-2 gap-10 p-8 md:p-12">
           
-          {/* Image Section */}
           <div className="relative bg-gray-100 p-8 rounded-2xl shadow-lg flex items-center justify-center border border-gray-200">
             <img
               src={product.image}
@@ -118,7 +118,6 @@ const SingleProduct = () => {
             )}
           </div>
 
-          {/* Product Info Section */}
           <div className="flex flex-col gap-6">
 
             <div>
@@ -130,11 +129,9 @@ const SingleProduct = () => {
               </h2>
             </div>
 
-            {/* Price & Stock Status Card */}
             <div className="bg-white p-6 rounded-xl shadow-xl border border-indigo-100">
               <div className="flex items-end justify-between">
                 
-                {/* Price Display */}
                 <div className="flex flex-col">
                   {product.afterdiscountprice && originalPrice ? (
                     <>
@@ -155,23 +152,19 @@ const SingleProduct = () => {
                   )}
                 </div>
 
-                {/* Stock Status */}
-                {isLocal && (
-                  <div className={`flex items-center text-sm font-bold px-3 py-1 rounded-full ${outofstock ? 'bg-red-100 text-red-700' : (fewstock ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700')}`}>
-                    <FaBoxes className="mr-1" />
-                    {outofstock ? 'Unavailable' : `${stock} In Stock`}
-                  </div>
-                )}
+                <div className={`flex items-center text-sm font-bold px-3 py-1 rounded-full ${outofstock ? 'bg-red-100 text-red-700' : (fewstock ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700')}`}>
+                  <FaBoxes className="mr-1" />
+                  {outofstock ? 'Unavailable' : `${stock} In Stock`}
+                </div>
+                
               </div>
             </div>
             
-            {/* Description */}
             <h3 className="text-xl font-semibold text-gray-800 border-b pb-2 mt-4">Product Details</h3>
             <p className="text-gray-700 text-base leading-relaxed">
               {product.description || "No detailed description available for this item."}
             </p>
 
-            {/* Rating */}
             {product.rating && product.rating.rate ? (
               <div className="flex items-center gap-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <div className="flex items-center text-2xl font-bold text-yellow-600">
