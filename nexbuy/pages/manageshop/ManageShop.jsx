@@ -1,5 +1,4 @@
-"use client"; // CRITICAL: Declares this a Client Component for hooks like useRouter and useState
-
+"use client"; 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Correct import for Next.js App Router
@@ -42,7 +41,7 @@ const ManageShop = () => {
       router.push("/login");
     }
   }, [router]);
-  // 2. Fetch shops when userId is available
+
   useEffect(() => {
     if (userId) {
       fetchShops();
@@ -139,7 +138,6 @@ const ManageShop = () => {
     setEditingShopId(shopToEdit.id); 
     toast.info(`Editing shop: ${shopToEdit.name}`);
   };
-
   // Show a loading/placeholder message until userId is confirmed
   if (!userId) {
     return (
@@ -150,12 +148,11 @@ const ManageShop = () => {
       </div>
     );
   }
-
   // --- Main Component Render ---
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        
+      
         {/* Header */}
         <h2 className="text-5xl font-extrabold text-center text-gray-900 tracking-tight mb-12 my-20">
           <FaStore className="inline mr-3 text-indigo-600" />
@@ -171,7 +168,7 @@ const ManageShop = () => {
           <div className="space-y-6">
             {/* Shop Name Input */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2 flex items-center">
+              <label className="text-gray-700 font-semibold mb-2 flex items-center">
                 <FaTag className="mr-2 text-indigo-500" /> Shop Name
               </label>
               <input
@@ -190,7 +187,7 @@ const ManageShop = () => {
 
             {/* Shop Description Input */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2 flex items-center">
+              <label className="text-gray-700 font-semibold mb-2 flex items-center">
                 <FaFileAlt className="mr-2 text-indigo-500" /> Shop Description
               </label>
               <textarea

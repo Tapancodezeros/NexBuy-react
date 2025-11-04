@@ -41,6 +41,17 @@ export const fetchProductsByCategory = async (category) => {
     return [];
   }
 };
+// ✅ Fetch products by shop ID
+export const fetchProductsByShop = async (shopId) => {
+  try {
+    const response = await api.get(`/products/shop/${shopId}`);
+    return Array.isArray(response.data.data) ? response.data.data : [];
+  } catch (error) {
+    console.error(`❌ Error fetching products for shop with ID "${shopId}":`, error);
+    return [];
+  }
+};
+
 // ✅ Create a new product
 export const createProduct = async (productData) => {
   try {

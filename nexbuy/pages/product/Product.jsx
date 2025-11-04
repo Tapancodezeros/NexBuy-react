@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaPlus, FaEdit, FaTrashAlt, FaStar, FaRupeeSign, FaList,FaShoppingCart } from "react-icons/fa";
-import { BiCategory } from "react-icons/bi"; // Icon for category select
+import { BiCategory } from "react-icons/bi"; 
 
 const Product = () => {
   const [categories, setCategories] = useState([]);
@@ -23,7 +23,7 @@ const Product = () => {
             <FaTrashAlt className="mr-2 text-red-500" /> Product deleted successfully!
           </div>
         );
-        // Refresh data after deletion
+
         setAllProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
       } catch (error) {
         console.error(`Failed to delete product with ID ${id}:`, error);
@@ -36,10 +36,9 @@ const Product = () => {
     router.push(`/edit-product/${id}`);
   };
 
-  // Groups an array of products by their category
   const groupProductsByCategory = (products) => {
     const grouped = products.reduce((acc, product) => {
-      const category = product.category || 'other';
+      const category = product.category || 'other'; 
       if (!acc[category]) {
         acc[category] = [];
       }
@@ -60,11 +59,30 @@ const Product = () => {
         fetchAllProducts(),
       ]);
 
+      // 1. Load User Shop IDs from localStorage
+      let userShopIds = [];
+      const shopIdsString = localStorage.getItem("userShopIds"); 
+      if (shopIdsString) {
+          try {
+              userShopIds = JSON.parse(shopIdsString);
+              if (!Array.isArray(userShopIds)) userShopIds = []; // Ensure it's an array
+          } catch (e) {
+              console.error("Failed to parse userShopIds:", e);
+          }
+      }
+
+      // 2. Filter Products by User Shop IDs
+      const shopFilteredProducts = products.filter(product => 
+        userShopIds.includes(product.shopId)
+      );
+
       const categoryArray = Array.isArray(cats) ? cats : cats?.categories || [];
-      const uniqueCategories = Array.from(new Set([...categoryArray, 'other']));
+      const uniqueCategories = Array.from(new Set([...categoryArray, "other"]));
+      
       setCategories(uniqueCategories);
-      setAllProducts(products);
-      setCategoryProducts(groupProductsByCategory(products));
+      // Set state with only the shop-filtered products
+      setAllProducts(shopFilteredProducts); 
+      setCategoryProducts(groupProductsByCategory(shopFilteredProducts));
       setSelectedCat("all");
     } catch (error) {
       console.error("Error loading initial data:", error);
@@ -86,39 +104,40 @@ const Product = () => {
   }, [allProducts, selectedCat]);
 
   const handleChange = (e) => {
-    const selected = e.target.value;
-    setSelectedCat(selected);
+    setSelectedCat(e.target.value);
+  };
+  
+  const formatCategoryName = (cat) => {
+      if (!cat) return '';
+      if (cat === 'all') return 'All Categories';
+      if (cat === 'other') return 'Miscellaneous';
 
-    if (selected === "all") {
-      setCategoryProducts(groupProductsByCategory(allProducts));
-    } else {
-      const productsForCategory = allProducts.filter(
-        (p) => p.category === selected || (selected === 'other' && !p.category)
-      );
-      setCategoryProducts([
-        { category: selected, products: productsForCategory },
-      ]);
-    }
+      return cat.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
-  // --- Product Card Component for cleaner render logic ---
+
   const ProductCard = ({ product }) => {
-    const stock = product.stock ?? 99; // Use product stock if available, otherwise assume 99
+    const stock = product.stock ?? 99;
     const outofstock = stock <= 0;
     const fewstock = stock > 0 && stock <= 5;
-    // Price logic using INR conversion for external API prices
-    const price = product.afterdiscountprice
-      ? product.afterdiscountprice.toFixed(0)
-      : (product.price * 83).toFixed(0);
-    const originalPrice = product.afterdiscountprice
-      ? product.price.toFixed(0)
-      : null;
+
+    const usdPrice = parseFloat(product.price) || 0;
+    const afterDiscountUsd = parseFloat(product.afterdiscountprice) || 0;
+    const discount = parseFloat(product.discount) || 0;
+    
+    const exchangeRate = 83;
+    const originalPrice = (usdPrice * exchangeRate).toFixed(0);
+    const finalPrice = afterDiscountUsd > 0
+      ? (afterDiscountUsd * exchangeRate).toFixed(0)
+      : originalPrice;
+    
+    const showDiscount = afterDiscountUsd > 0 && discount > 0;
+
 
     return (
       <div
         className="relative bg-white rounded-2xl shadow-xl border  border-gray-100 transition-all duration-300 transform hover:shadow-indigo-300/60 hover:-translate-y-1 overflow-hidden flex flex-col "
       >
-        {/* Linkable Content Area */}
         <Link
           href={`/product/${product.id}`}
           className="flex-1 flex flex-col"
@@ -129,7 +148,7 @@ const Product = () => {
               alt={product.title}
               className="max-h-full max-w-full object-contain"
             />
-            {/* Stock Badges */}
+
             {outofstock && (
               <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
                 Sold Out
@@ -159,33 +178,31 @@ const Product = () => {
             </div>
             
             <p className="text-xs text-indigo-600 uppercase tracking-widest font-medium">
-              {product.category || 'Miscellaneous'}
+              {formatCategoryName(product.category || 'other')}
             </p>
 
-            {/* Price Block */}
             <div className="mt-4 pt-4 border-t border-dashed border-gray-200">
-              {originalPrice ? (
+              {showDiscount ? (
                 <div className="flex flex-col">
                   <span className="text-xs text-gray-500 line-through">
                     <FaRupeeSign className="inline w-3 h-3 mb-0.5" />{originalPrice}
                   </span>
                   <span className="text-xl font-extrabold text-green-600 flex items-center">
-                    <FaRupeeSign className="mr-1 w-4 h-4" />{price}
+                    <FaRupeeSign className="mr-1 w-4 h-4" />{finalPrice}
                   </span>
                   <span className="text-sm font-semibold text-indigo-500 mt-0.5">
-                    Save {product.discount}%
+                    Save {discount.toFixed(0)}%
                   </span>
                 </div>
               ) : (
                 <span className="text-2xl font-extrabold text-gray-800 flex items-center">
-                  <FaRupeeSign className="mr-1 w-4 h-4" />{price}
+                  <FaRupeeSign className="mr-1 w-4 h-4" />{finalPrice}
                 </span>
               )}
             </div>
           </div>
         </Link>
-        
-        {/* Action Buttons (Local Products Only) */}
+
         <div className="flex justify-between p-4 bg-gray-50 border-t border-gray-100">
           <button
             onClick={() => handleEdit(product.id)}
@@ -203,16 +220,14 @@ const Product = () => {
       </div>
     );
   };
-  // --- Main Component Render ---
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 pt-8 pb-16 my-15">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Sticky Header / Toolbar */}
+
         <div className="sticky top-0 z-10 bg-white rounded-xl shadow-lg p-5 mb-8 border-b border-gray-100">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-            
-            {/* Navigation & Title */}
+
             <div className="flex items-center gap-4">
               <Link href="/">
                 <button className="flex items-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg transition-all shadow-sm text-sm">
@@ -225,10 +240,8 @@ const Product = () => {
               </h1>
             </div>
 
-            {/* Controls: Filter & Add */}
             <div className="flex flex-col sm:flex-row items-center gap-3">
-              
-              {/* Category Filter */}
+
               <div className="relative flex items-center w-full sm:w-auto">
                 <BiCategory className="absolute left-3 text-gray-500 pointer-events-none" />
                 <select
@@ -240,13 +253,12 @@ const Product = () => {
                   {Array.isArray(categories) &&
                     categories.map((cat) => (
                       <option key={cat} value={cat}>
-                        {cat.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                        {formatCategoryName(cat)}
                       </option>
                     ))}
                 </select>
               </div>
-              
-              {/* Add Product Button */}
+
               <Link
                 href="/add-product"
                 className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-3 rounded-xl shadow-md transition-all transform hover:scale-[1.02]"
@@ -257,7 +269,6 @@ const Product = () => {
           </div>
         </div>
 
-        {/* Products by category */}
         {categoryProducts.length === 0 ? (
            <p className="text-center text-xl text-gray-500 py-20">
               No products found in the selected category.
@@ -267,7 +278,7 @@ const Product = () => {
             <div key={category} className="mb-14">
               <h3 className="text-3xl font-bold text-gray-800 mb-6 capitalize border-b-4 border-indigo-200 inline-block pb-1">
                 <FaList className="inline mr-2 text-indigo-600" />
-                {category === 'other' ? 'Miscellaneous' : category}
+                {formatCategoryName(category)}
                 <span className="ml-3 text-lg font-normal text-gray-500">({products.length} Items)</span>
               </h3>
               <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">

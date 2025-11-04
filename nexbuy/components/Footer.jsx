@@ -38,7 +38,7 @@ export const Footer = () => {
       </div>
 
       <div className="border-t border-gray-200 bg-gray-100 py-6 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} NexBuy. All rights reserved. Built with.
+        © {new Date().getFullYear()} NexBuy. All rights reserved.
       </div>
     </footer>
   );
