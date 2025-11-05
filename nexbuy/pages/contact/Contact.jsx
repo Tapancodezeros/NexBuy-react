@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { FaUser, FaEnvelope, FaCommentDots, FaArrowLeft, FaPaperPlane } from "react-icons/fa"; // Imported icons
+import { FaUser, FaEnvelope, FaCommentDots, FaArrowLeft, FaPaperPlane } from "react-icons/fa";
+import { submitContactForm } from "@/app/api/apiService";
 
 const Contact = () => {
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formInputData = Object.fromEntries(formData.entries());
-    localStorage.setItem("contactData", JSON.stringify(formInputData));
-    toast.success("🚀 Your message has been submitted successfully!",{ autoClose: 1500 }); // Enhanced toast message
-    e.target.reset();
+
+    try {
+      await submitContactForm(formInputData);
+      toast.success("🚀 Your message has been submitted successfully!",{ autoClose: 1500 }); 
+      e.target.reset();
+    } catch (error) {
+      console.error("Failed to submit contact form:", error);
+      toast.error("Failed to send message. Please try again later.");
+    }
   };
 
   return (
@@ -27,31 +34,29 @@ const Contact = () => {
         </div>
 
         <form onSubmit={handleFormSubmit} className="space-y-6">
-          
-          {/* Full Name Input */}
+
           <div>
             <label
-              htmlFor="username"
-              className="block text-gray-700 font-semibold mb-2 flex items-center"
+              htmlFor="fullName"
+              className="text-gray-700 font-semibold mb-2 flex items-center"
             >
               <FaUser className="mr-2 text-indigo-500" /> Full Name
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
+              id="fullName"
+              name="fullName"
               required
               autoComplete="off"
               placeholder="Enter your name"
               className="w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
             />
           </div>
-          
-          {/* Email Input */}
+
           <div>
             <label
               htmlFor="email"
-              className="block text-gray-700 font-semibold mb-2 flex items-center"
+              className="text-gray-700 font-semibold mb-2 flex items-center"
             >
               <FaEnvelope className="mr-2 text-indigo-500" /> Email Address
             </label>
@@ -66,11 +71,10 @@ const Contact = () => {
             />
           </div>
 
-          {/* Message Textarea */}
           <div>
             <label
               htmlFor="message"
-              className="block text-gray-700 font-semibold mb-2 flex items-center"
+              className=" text-gray-700 font-semibold mb-2 flex items-center"
             > 
                 <FaCommentDots className="mr-2 text-indigo-500" /> Your Message  
             </label>
@@ -85,7 +89,6 @@ const Contact = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full flex items-center justify-center bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-indigo-700 transform hover:scale-[1.01] transition-all duration-300"
@@ -93,8 +96,7 @@ const Contact = () => {
             <FaPaperPlane className="mr-3" /> Send Message
           </button>
         </form>
-        
-        {/* Back Button */}
+
         <div className="mt-10 pt-6 border-t border-gray-100 text-center">
           <Link href="/">
             <button className="flex items-center justify-center mx-auto bg-gray-200 text-gray-700 px-6 py-3 rounded-xl shadow-md hover:bg-gray-300 transform hover:scale-105 transition-all duration-300 font-semibold">
@@ -106,5 +108,4 @@ const Contact = () => {
     </section>
   );
 };
-
 export default Contact;

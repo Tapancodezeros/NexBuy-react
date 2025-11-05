@@ -1,10 +1,10 @@
 "use client"; 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Correct import for Next.js App Router
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import {listShopsByUser,createShop,updateShop,deleteShop} from "@/app/api/apiService";
-import { FaStore, FaPlus, FaSave, FaArrowLeft, FaEdit, FaTrashAlt, FaTag, FaFileAlt } from "react-icons/fa";
+import { FaStore, FaPlus, FaSave, FaArrowLeft, FaEdit, FaTrashAlt, FaTag, FaFileAlt, FaEye } from "react-icons/fa";
 
 const ManageShop = () => {
   const [shop, setShop] = useState({ name: "", description: "" });
@@ -14,7 +14,7 @@ const ManageShop = () => {
   const [editingShopId, setEditingShopId] = useState(null);
   
   const router = useRouter(); 
-  // 1. Authentication and User ID Retrieval
+
   useEffect(() => {
     const userString = localStorage.getItem("userId");
     let actualUserId = null;
@@ -138,6 +138,11 @@ const ManageShop = () => {
     setEditingShopId(shopToEdit.id); 
     toast.info(`Editing shop: ${shopToEdit.name}`);
   };
+
+  const handleViewProducts = (shopId) => {
+    localStorage.setItem("selectedShopId", shopId);
+    router.push("/product");
+  };
   // Show a loading/placeholder message until userId is confirmed
   if (!userId) {
     return (
@@ -250,6 +255,12 @@ const ManageShop = () => {
                   </p>
                 </div>
                 <div className="flex gap-3 text-right">
+                  <button
+                    onClick={() => handleViewProducts(s.id)}
+                    className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors duration-200 shadow-md"
+                  >
+                    <FaEye className="mr-1" /> View Products
+                  </button>
                   <button
                     onClick={() => handleEdit(s)}
                     className="flex items-center px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors duration-200 shadow-md"

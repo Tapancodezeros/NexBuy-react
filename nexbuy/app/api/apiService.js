@@ -63,6 +63,17 @@ export const createProduct = async (productData) => {
   }
 };
 
+// ✅ Submit contact form
+export const submitContactForm = async (contactData) => {
+  try {
+    const response = await api.post("/contact/submit", contactData);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error submitting contact form:", error);
+    throw error;
+  }
+};
+
 // ✅ Fetch a single product by ID
 export const fetchProductById = async (id) => {
   try {

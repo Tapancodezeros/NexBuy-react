@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {fetchCategories,fetchAllProducts,deleteProduct,} from "@/app/api/apiService";
+import {fetchCategories,fetchAllProducts,deleteProduct, fetchProductsByShop} from "@/app/api/apiService";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -54,27 +54,23 @@ const Product = () => {
 
   const loadInitialData = async () => {
     try {
-      const [cats, products] = await Promise.all([
-        fetchCategories(),
-        fetchAllProducts(),
-      ]);
+      const selectedShopId = localStorage.getItem("selectedShopId");
+      let shopFilteredProducts = [];
 
-      // 1. Load User Shop IDs from localStorage
-      let userShopIds = [];
-      const shopIdsString = localStorage.getItem("userShopIds"); 
-      if (shopIdsString) {
-          try {
-              userShopIds = JSON.parse(shopIdsString);
-              if (!Array.isArray(userShopIds)) userShopIds = []; // Ensure it's an array
-          } catch (e) {
-              console.error("Failed to parse userShopIds:", e);
-          }
+      if (selectedShopId) {
+        // Fetch only products for the selected shop
+        shopFilteredProducts = await fetchProductsByShop(selectedShopId);
+        // Clear the filter so it doesn't persist on next visit
+        localStorage.removeItem("selectedShopId");
+      } else {
+        // Fetch all products associated with the user's shops
+        const allProducts = await fetchAllProducts();
+        const shopIdsString = localStorage.getItem("userShopIds");
+        const userShopIds = shopIdsString ? JSON.parse(shopIdsString) : [];
+        shopFilteredProducts = allProducts.filter(product => userShopIds.includes(product.shopId));
       }
 
-      // 2. Filter Products by User Shop IDs
-      const shopFilteredProducts = products.filter(product => 
-        userShopIds.includes(product.shopId)
-      );
+      const cats = await fetchCategories();
 
       const categoryArray = Array.isArray(cats) ? cats : cats?.categories || [];
       const uniqueCategories = Array.from(new Set([...categoryArray, "other"]));
